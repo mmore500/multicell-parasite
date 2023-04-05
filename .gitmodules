@@ -1,0 +1,6 @@
+[submodule "cpp/third-party/dishtiny"]
+	path = cpp/third-party/dishtiny
+	url = https://github.com/mmore500/dishtiny.git
+[submodule "third-party/Avida"]
+	path = third-party/Avida
+	url = https://github.com/devosoft/Avida.git
