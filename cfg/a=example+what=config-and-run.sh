@@ -500,9 +500,9 @@ EOF
 
 
 #==============================================================================
-# instset-transsmt.org
+# instset-transsmt.cfg
 #==============================================================================
-cat << 'EOF' > "instset-transsmt.org"
+cat << 'EOF' > "instset-transsmt.cfg"
 INSTSET transsmt:hw_type=2
 
 INST Nop-A
