@@ -646,3 +646,59 @@ EOF
 #______________________________________________________________________________
 
 ./avida -c avida.cfg
+
+
+# collate task profiles across updates
+python3 - <<'EOF'
+import glob
+import re
+
+import numpy as np
+import pandas as pd
+
+
+for target in "hosts", "parasite":
+  task_filenames = glob.glob(
+    f"data/grid_task_{target}.*.dat",
+  )
+  file_dfs = []
+  for task_filename in task_filenames:
+    print(f"handling {task_filename}")
+    update = int(
+      re.search(r"\d+", task_filename).group()
+    )
+    tasks_df = pd.read_csv(
+      task_filename, sep=" ", header=None
+    ).dropna(axis=1)
+
+    occupancy = tasks_df.to_numpy().flatten() != -1
+
+    tasks = tasks_df.to_numpy().flatten()
+    tasks[~occupancy] = 0
+
+    task_counts = np.array([
+        int(val).bit_count()
+        for val in tasks
+    ])
+
+    df = pd.DataFrame({
+      "position" : [*range(len(occupancy))],
+      "occupancy" : occupancy,
+      "task bit field" : tasks,
+      "task count" : task_counts,
+      "update" : update,
+    })
+
+    for i in range(10):
+        has_task = (tasks & (1 >> i)).astype(bool)
+        df[f"has task {i}"] = has_task
+
+    file_dfs.append(df)
+
+  print(f"writing collated tasks to data/{target}_tasks.csv.gz")
+  pd.concat(file_dfs).reset_index(drop=True).to_csv(
+    f"data/{target}_tasks.csv.gz", index=False
+  )
+
+print("task collation complete")
+EOF
