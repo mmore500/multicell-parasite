@@ -5,66 +5,177 @@
 # avida.cfg
 #==============================================================================
 cat << 'EOF' > "avida.cfg"
-#Let's output a bit about the threads and parasites to stdout
+# Let's output a bit about the threads and parasites to stdout
 VERBOSITY 3
-#We use a bigger world than default
+# We use a bigger world than default
 WORLD_X 40
 WORLD_Y 400
 NUM_DEMES 10
 
+
+
+# DEME CONFIGURATION
+#------------------------------------------------------------------------------
+
+# Deme seeding method.
+# 0 = Maintain old consistency
+# 1 = New method using genotypes
 DEMES_SEED_METHOD 1
+
+# Deme divide method.
+# Only works with DEMES_SEED_METHOD 1
+# 0 = Replace and target demes
+# 1 = Replace target deme, reset source deme to founders
+# 2 = Replace target deme, leave source deme unchanged
+# 3 = Replace the target deme, and reset the number of resources consumed by the source deme.
+# 4 = Replace the target deme,  reset the number of resources consumed by the source deme, and kill the germ line organisms of the source deme
 DEMES_DIVIDE_METHOD 2
+
+# Should demes use a distinct germline?
+# 0: No
+# 1: Traditional germ lines
+# 2: Genotype tracking
+# 3: Organism flagging germline
 DEMES_USE_GERMLINE 2
+
+# Give empty demes preference as targets of deme replication?
 DEMES_PREFER_EMPTY 1
+
+# Reset resources in demes on replication?
+# 0 = reset both demes
+# 1 = reset target deme
+# 2 = deme resources remain unchanged
 DEMES_RESET_RESOURCES 2
 
+# Number of offspring produced by a deme to trigger its replication.
+# 0 = OFF
 DEMES_REPLICATE_BIRTHS 100000000
+
+# Max number of births that can occur within a deme;
+# used with birth-count replication
 DEMES_MAX_BIRTHS 0
+
+# Give empty demes preference as targets of deme replication?
 DEMES_PREFER_EMPTY 1
+
+# Which demes can an offspring land in when it migrates?
+# 0 = Any other deme
+# 1 = Eight neighboring demes
+# 2 = Two adjacent demes in list
+# 3 = Proportional based on the number of points
+# 4 = Use the weight matrix specified in MIGRATION_FILE
 DEMES_MIGRATION_METHOD 4
+
+# Probability of a parasite migrating to a different deme
 DEMES_PARASITE_MIGRATION_RATE 0.002
+
+# Probability of an offspring being born in a different deme.
 DEMES_MIGRATION_RATE 0.0
 
+# NxN file that describes connectivity weights between demes
 MIGRATION_FILE migration.mat
 
 
-#We assign mtuation rates independently for hosts/parasites
-COPY_MUT_PROB 0
 
-DIV_MUT_PROB 0.001000
-DIV_INS_PROB 0.0
-DIV_DEL_PROB 0.0
+# Cell Configuration
+#------------------------------------------------------------------------------
 
-DIVIDE_INS_PROB 0
-DIVIDE_DEL_PROB 0
-
-INJECT_MUT_PROB 0.00#5625
-INJECT_INS_PROB 0.00#0625
-INJECT_DEL_PROB 0.00#0625
-
-
-GERMLINE_COPY_MUT 0.0                # Prob. of copy mutations during germline replication
-GERMLINE_INS_MUT 0.0
-GERMLINE_DEL_MUT 0.0
-#Make birth non-spatial
-
-BIRTH_METHOD 6 #random within deme
+# Make birth non-spatial
+# Which organism should be replaced when a birth occurs?
+# 0 = Random organism in neighborhood
+# 1 = Oldest in neighborhood
+# 2 = Largest Age/Merit in neighborhood
+# 3 = None (use only empty cells in neighborhood)
+# 4 = Random from population (Mass Action)
+# 5 = Oldest in entire population
+# 6 = Random within deme
+# 7 = Organism faced by parent
+# 8 = Next grid cell (id+1)
+# 9 = Largest energy used in entire population
+# 10 = Largest energy used in neighborhood
+# 11 = Local neighborhood dispersal
+# 12 = Kill offpsring after recording birth stats (for behavioral trials)
+# 13 = Kill parent and offpsring (for behavioral trials)
+BIRTH_METHOD 6 # random within deme
+# Overide BIRTH_METHOD to preferentially choose empty cells for offsping?
 PREFER_EMPTY 0
 
-#Hosts get to live a bit longer than usual
+# Hosts get to live a bit longer than usual
+# When should death by old age occur?
+# When executed genome_length * AGE_LIMIT (+dev) instructions
 AGE_LIMIT 30
 
-#Keep genomes from programatically creating their own variation
-#...because it's complicated enough as is
+
+
+# MUTATION CONFIGURATION
+#------------------------------------------------------------------------------
+
+# Substitution rate (per copy)
+# We assign mtuation rates independently for hosts/parasites
+COPY_MUT_PROB 0
+
+# Substitution rate (per site, applied on divide)
+DIV_MUT_PROB 0.001000
+# Insertion rate (per site, applied on divide)
+DIV_INS_PROB 0.0
+# Deletion rate (per site, applied on divide)
+DIV_DEL_PROB 0.0
+
+# Insertion rate (max one, per divide)
+DIVIDE_INS_PROB 0
+# Deletion rate (max one, per divide)
+DIVIDE_DEL_PROB 0
+
+# Substitution rate (per site, applied on inject)
+INJECT_MUT_PROB 0.00#5625
+# Insertion rate (per site, applied on inject)
+INJECT_INS_PROB 0.00#0625
+# Deletion rate (per site, applied on inject)
+INJECT_DEL_PROB 0.00#0625
+
+# Prob. of copy mutations during germline replication
+GERMLINE_COPY_MUT 0.0
+# Prob. of insertion mutations during germline replication
+GERMLINE_INS_MUT 0.0
+# Prob. of deletion mutations during germline replication
+GERMLINE_DEL_MUT 0.0
+
+# Keep genomes from programatically creating their own variation
+# ...because it's complicated enough as is
+# Should genotypes that cannot replicate perfectly not be allowed to replicate?
 STERILIZE_UNSTABLE 1
 
-#Don't reset host thread upon infection
+
+
+# PARASITE CONFIGURATION
+#------------------------------------------------------------------------------
+
+# Don't reset host thread upon infection
+# What should happen to a parasite when it gives birth?
+# 0 = Leave the parasite thread state untouched.
+# 1 = Resets the state of the calling thread (for SMT parasites, this must be 1)
 INJECT_METHOD 1
 
-#Parasite Specfic Settings
+# 0: Infection always succeeds.
+# 1: Infection succeeds if parasite matches at least one host task
+# 2: Infection succeeds if parasite does NOT match at least one task
+# 3: Parasite tasks must match host tasks exactly (Matching Alleles)
 INFECTION_MECHANISM 1
+
+# If set to 1, at least one reaction is required for a successful divide
 REQUIRE_SINGLE_REACTION 1
+
+# Infection causes host steralization and takes all cpu cycles
+# (setting this to 1 will override inject_virulence)
+INJECT_IS_VIRULENT 0
+
+# The probabalistic percentage of cpu cycles allocated to the parasite instead of the host.
+# Ensure INJECT_IS_VIRULENT is set to 0.
+# This only works for single infection at the moment.
+# Note that this should be set to a default even if virulence is evolving.
 PARASITE_VIRULENCE 0.85
+
+# Maximum number of Threads a CPU can spawn
 MAX_CPU_THREADS 2
 
 #Parasites use the TransSMT simulated hardware, which is setup in this weird way
