@@ -1,0 +1,13 @@
+-
+  a: host-smt-ancestral.spop.provlog.yaml
+  artifact: host-smt-ancestral.spop
+  artifact_sha256: 323d049838cc749e5763376fa98dd015a97d8294e67bd035f3256e62eb63862c
+  date: 2023-05-02T13:17:08-07:00
+  hostname: thinkpad
+  revision: 54ab3eb6224d040336d82197cfe6e65411aecf86
+  revision_avida: 8cd14b773d4345b2bf612d418e8cc98b80ff9d36
+  user: mmore500
+  uuid: 2548de9f-9e9a-4dca-acdb-e6f4bbb3b3a6
+  script: /home/mmore500/2023-05-01/multicell-parasite/script/make_host_population.sh
+  slurm_job_id: none
+  pwd: /home/mmore500/2023-05-01/multicell-parasite/work
