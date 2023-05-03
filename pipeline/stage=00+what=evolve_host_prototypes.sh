@@ -94,4 +94,4 @@ done \
     --desc "instantiate slurm scripts" \
     --total "${NUM_JOBS}"
 
-find "${SBATCH_SCRIPT_DIRECTORY_PATH}" -type f | python3 -m qspool
+find "${SBATCH_SCRIPT_DIRECTORY_PATH}" -type f | xargs -L 1 sbatch
