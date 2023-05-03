@@ -162,7 +162,8 @@ EOF
 {{ tasks_configuration }}
 EOF
 
-  RANDOM_SEED="\${EPOCH_COUNTER}"
+  RANDOM_SEED="\$(cksum <<< "{{ tasks_slug }} \${EPOCH_COUNTER}" | cut -f 1 -d ' ')"
+  echo "RANDOM_SEED \${RANDOM_SEED}"
 
   {{ config_and_run }}
 
