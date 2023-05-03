@@ -1,4 +1,4 @@
-TMPDIR="${HOME}/scratch/tmp"
+export TMPDIR="${HOME}/scratch/tmp"
 mkdir -p "${TMPDIR}"
 
 AVIDA_REVISION="895874591d3fa9ac147e9f73a33d7f58759bd49d"
