@@ -140,8 +140,9 @@ while :; do
   attempt: {{ attempt }}
   batch: {{ batch }}
   stage: 0
-  step: {{ epoch }}
   date: $(date --iso-8601=seconds)
+  epoch: \${EPOCH_COUNTER}
+  initial_epoch: {{ epoch }}
   hostname: $(hostname)
   revision: {{ revision }}
   revision_avida: ${AVIDA_REVISION}
