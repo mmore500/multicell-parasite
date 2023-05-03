@@ -13,7 +13,7 @@ while ! [ -L "${TMPDIR}/${AVIDA_REVISION}" ]; do
 
   (
     module purge || :
-    module load ccache/3.3.3 GCCcore/11.3.0 CMake/3.23.1 git/2.36.0-nodocs || :
+    module load ccache/3.3.3 GCCcore/11.3.0 CMake/3.23.1 git/2.36.0-nodocs binutils/2.39 || :
     export CXX="ccache g++"
     cd "${AVIDA_INSTALL_PATH}"
     git checkout "${AVIDA_REVISION}"

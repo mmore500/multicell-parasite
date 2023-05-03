@@ -4,7 +4,7 @@
 echo "REVISION ${REVISION}"
 
 module purge || :
-module load GCCcore/11.3.0 git/2.36.0-nodocs Python/3.10.4 || :
+module load GCCcore/11.3.0 git/2.36.0-nodocs Python/3.10.4 binutils/2.39 || :
 
 VENV_PATH="$(mktemp -d)"
 echo "VENV_PATH ${VENV_PATH}"
