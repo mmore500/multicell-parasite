@@ -9,14 +9,15 @@ while ! [ -L "${TMPDIR}/${AVIDA_REVISION}" ]; do
   AVIDA_INSTALL_PATH="$(mktemp -d)"
   echo "AVIDA_INSTALL_PATH ${AVIDA_INSTALL_PATH}"
 
-  git clone https://github.com/devosoft/Avida.git --recursive "${AVIDA_INSTALL_PATH}"
+  git clone https://github.com/devosoft/Avida.git "${AVIDA_INSTALL_PATH}"
 
   (
     module purge || :
     module load ccache/3.3.3 GCCcore/11.3.0 CMake/3.23.1 git/2.36.0-nodocs || :
     export CXX="ccache g++"
     cd "${AVIDA_INSTALL_PATH}"
-    git checkout --recurse-submodules "${AVIDA_REVISION}"
+    git checkout "${AVIDA_REVISION}"
+    git submodule update --init --recursive
     git submodule foreach --recursive git status
     ./build_avida
   )
