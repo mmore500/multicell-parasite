@@ -113,25 +113,25 @@ cat << 'EOF' > "events.cfg"
 
 # Seed the population with a single organism
 u begin LoadPopulation host-smt.spop
-u 1000 SavePopulation
+u 5000 SavePopulation
 
-u 1000 PrintHostPhenotypeData
-u 1000 PrintParasitePhenotypeData
+u 5000 PrintHostPhenotypeData
+u 5000 PrintParasitePhenotypeData
 
-u 1000 DumpHostGenotypeList
-u 1000 DumpParasiteGenotypeList
+u 5000 DumpHostGenotypeList
+u 5000 DumpParasiteGenotypeList
 
-u 1000 DumpHostTaskGrid
-u 1000 DumpParasiteTaskGrid
+u 5000 DumpHostTaskGrid
+u 5000 DumpParasiteTaskGrid
 
-u 1000 PrintHostTasksData
-u 1000 PrintParasiteTasksData
+u 5000 PrintHostTasksData
+u 5000 PrintParasiteTasksData
 
-u 1000 PrintAverageData       # Save info about the average genotypes
-u 1000 PrintCountData         # Count organisms, genotypes, species, etc.
-u 1000 PrintTimeData          # Track time conversion (generations, etc.)
+u 5000 PrintAverageData       # Save info about the average genotypes
+u 5000 PrintCountData         # Count organisms, genotypes, species, etc.
+u 5000 PrintTimeData          # Track time conversion (generations, etc.)
 
-u 1000 Exit
+u 5000 Exit
 
 EOF
 #______________________________________________________________________________
