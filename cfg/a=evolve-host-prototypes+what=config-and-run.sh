@@ -75,7 +75,8 @@ EOF
 #==============================================================================
 # environment.cfg
 #==============================================================================
-cat << 'EOF' > "environment.cfg"
+if [ ! -f "environment.cfg" ]; then
+  cat << 'EOF' > "environment.cfg"
 RESOURCE  resECHO:inflow=125:outflow=0.10
 
 REACTION  NOT  not   process:resource=resECHO:value=0.0:type=pow:frac=0.5:min=1:max=1:  requisite:reaction_max_count=1
@@ -89,6 +90,10 @@ REACTION  XOR  xor   process:resource=resECHO:value=0.0:type=pow:frac=0.5:min=1:
 REACTION  EQU  equ   process:resource=resECHO:value=0.0:type=pow:frac=0.5:min=1:max=1:  requisite:reaction_max_count=1
 
 EOF
+else
+  echo "pre-existing environment.cfg detected"
+  echo "config-and-run environment.cfg skipped"
+fi
 #______________________________________________________________________________
 
 

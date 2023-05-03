@@ -45,7 +45,9 @@ NUM_JOBS=25
 echo "NUM_JOBS ${NUM_JOBS}"
 
 # adapted from https://superuser.com/a/284226
-for TASKS in TODO; do
+# generated using script/pick_resource_combos.py
+for TASKS in stage=00+what=evolve_host_prototypes/tasks/*; do
+  echo "tasks_slug $(basename ${TASKS})"
   SBATCH_SCRIPT_PATH="${SBATCH_SCRIPT_DIRECTORY_PATH}/$(uuidgen).slurm.sh"
   echo "SBATCH_SCRIPT_PATH ${SBATCH_SCRIPT_PATH}"
   j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "stage=00+what=evolve_host_prototypes/evolve_host_prototypes.slurm.sh.jinja" << J2_HEREDOC_EOF
@@ -85,7 +87,9 @@ setup_instrumentation: |
 ${SETUP_INSTRUMENTATION_SNIPPET}
 setup_production_dependencies: |
 ${SETUP_PRODUCTION_DEPENDENCIES_SNIPPET}
-tasks: ${TASKS}
+tasks_slug: $(basename ${TASKS})
+tasks_configuration: |
+$(cat "${TASKS}" | sed 's/^/  /')
 J2_HEREDOC_EOF
 chmod +x "${SBATCH_SCRIPT_PATH}"
 

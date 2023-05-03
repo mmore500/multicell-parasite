@@ -30,11 +30,13 @@ echo "EPOCH ${EPOCH}"
 PREV_EPOCH="{{ epoch - 1 }}"
 echo "PREV_EPOCH ${PREV_EPOCH}"
 
+echo "tasks_slug {{ tasks_slug }}"
+
 {{ setup_production_dependencies }}
 
 {{ install_avida }}
 
-STAGE_PATH="${HOME}/scratch/multicell-parasite/data/runmode={{ runmode }}/stage=00+what=evolve_host_prototypes/tasks={{ tasks | replace(" ", "-") }}/"
+STAGE_PATH="${HOME}/scratch/multicell-parasite/data/runmode={{ runmode }}/stage=00+what=evolve_host_prototypes/tasks={{ tasks_slug }}/"
 echo "STAGE_PATH ${STAGE_PATH}"
 
 export ATTEMPT_PATH="${STAGE_PATH}/attempts/alph=$(python3 -m alphinity {{ attempt }})+attempt={{ attempt }}/"
@@ -154,7 +156,13 @@ while :; do
 EOF
 
   cp "\${LOAD_POPULATION_PATH}" host-smt.spop
+
+  cat << EOF >> "environment.cfg"
+{{ tasks_configuration }}
+EOF
+
   RANDOM_SEED="\${EPOCH_COUNTER}"
+
   {{ config_and_run }}
 
   LOAD_POPULATION_PATH="\$(echo "\${PWD}/data/"*.spop | xargs readlink -f)"
@@ -202,7 +210,9 @@ setup_instrumentation: |
   {{ setup_instrumentation | indent(2) }}
 setup_production_dependencies: |
   {{ setup_production_dependencies | indent(2) }}
-tasks: {{ tasks }}
+tasks_configuration: |
+  {{ tasks_configuration | indent(2) }}
+tasks_slug: {{ tasks_slug }}
 J2_HEREDOC_EOF_{{ "instantiated" }}
 }| j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "${CONTINUATION_TEMPLATE_PATH}"
 chmod +x "${SBATCH_SCRIPT_PATH}"
