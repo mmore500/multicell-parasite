@@ -74,6 +74,7 @@ load_population_path: |
 load_population_provlog_path: |
   LOAD_POPULATION_PROVLOG_PATH="\$(mktemp)"
   for try in {0..9}; do
+    URL="https://raw.githubusercontent.com/mmore500/multicell-parasite/${REVISION}/cfg/host-smt-ancestral.spop.provlog.yaml"
     echo "URL \${URL}"
     curl -L -o "\${LOAD_POPULATION_PROVLOG_PATH}" "\${URL}" && break
     echo "curl failed (try \${try})"
