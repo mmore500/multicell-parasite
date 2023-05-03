@@ -186,7 +186,7 @@ echo "LOAD_POPULATION_PROVLOG_PATH ${LOAD_POPULATION_PROVLOG_PATH}"
 
 CONTINUATION_TEMPLATE_PATH="$(mktemp)"
 cat << 'CONTINUATION_TEMPLATE_HEREDOC_{{ "instantiated" }}' > "${CONTINUATION_TEMPLATE_PATH}"
-  {{ continuation_template }}
+{{ continuation_template }}
 CONTINUATION_TEMPLATE_HEREDOC_{{ "instantiated" }}
 
 SBATCH_SCRIPT_PATH="$(mktemp)"
@@ -199,19 +199,19 @@ cat << 'J2_HEREDOC_EOF_{{ "instantiated" }}'
 attempt: {{ attempt }}
 batch: {{ batch }}
 config_and_run: |
-  {{ config_and_run | indent(2) }}
+{{ config_and_run | indent(2, first=True) }}
 continuation_template: |
-  {{ continuation_template | indent(2) }}
+{{ continuation_template | indent(2, first=True) }}
 install_avida: |
-  {{ install_avida | indent(2) }}
+{{ install_avida | indent(2, first=True) }}
 revision: {{ revision }}
 runmode: {{ runmode }}
 setup_instrumentation: |
-  {{ setup_instrumentation | indent(2) }}
+{{ setup_instrumentation | indent(2, first=True) }}
 setup_production_dependencies: |
-  {{ setup_production_dependencies | indent(2) }}
+{{ setup_production_dependencies | indent(2, first=True) }}
 tasks_configuration: |
-  {{ tasks_configuration | indent(2) }}
+{{ tasks_configuration | indent(2, first=True) }}
 tasks_slug: {{ tasks_slug }}
 J2_HEREDOC_EOF_{{ "instantiated" }}
 }| j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "${CONTINUATION_TEMPLATE_PATH}"
