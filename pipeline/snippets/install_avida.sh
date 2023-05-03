@@ -1,7 +1,10 @@
+TMPDIR="${HOME}/scratch/tmp"
+mkdir -p "${TMPDIR}"
+
 AVIDA_REVISION="8cd14b773d4345b2bf612d418e8cc98b80ff9d36"
 echo "AVIDA_REVISION ${AVIDA_REVISION}"
 
-while ! [ -L "/tmp/${AVIDA_REVISION}" ]; do
+while ! [ -L "${TMPDIR}/${AVIDA_REVISION}" ]; do
 
   AVIDA_INSTALL_PATH="$(mktemp -d)"
   echo "AVIDA_INSTALL_PATH ${AVIDA_INSTALL_PATH}"
@@ -18,9 +21,11 @@ while ! [ -L "/tmp/${AVIDA_REVISION}" ]; do
     ./build_avida
   )
 
-  ln -s "${AVIDA_INSTALL_PATH}" "/tmp/${AVIDA_REVISION}" || :
+  ln -s "${AVIDA_INSTALL_PATH}" "${TMPDIR}/${AVIDA_REVISION}" || :
 
 done
 
-export AVIDA="/tmp/${AVIDA_REVISION}/cbuild/work/avida"
+export AVIDA="${TMPDIR}/${AVIDA_REVISION}/cbuild/work/avida"
 "${AVIDA}" -version
+
+unset TMPDIR
