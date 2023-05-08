@@ -87,5 +87,5 @@ for __ in range(40):
         tasks_config_file.write("RESOURCE resECHO:inflow=125:outflow=0.10\n")
         for task in sampled:
             tasks_config_file.write(
-                f"REACTION {task} process:resource=resECHO:value=0.0:type=pow:frac=0.5:min=1:max=1:  requisite:reaction_max_count=1\n"
+                f"REACTION {task} process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1\n"
             )
