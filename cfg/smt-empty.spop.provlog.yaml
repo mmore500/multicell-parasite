@@ -1,0 +1,13 @@
+-
+  a: smt-empty.spop.provlog.yaml
+  artifact: smt-empty.spop
+  artifact_sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  date: 2023-05-10T12:19:28-04:00
+  hostname: thinkpad
+  revision: f02a869044a235a850bd5aa8703e30436dbd1209
+  revision_avida: a271e0f667a90165311b89ea90cc54b9af1ca3ba
+  user: mmore500
+  uuid: 2526cf32-cd81-4660-a1d6-21d86f5288f4
+  script: /home/mmore500/2023-05-10/multicell-parasite/script/make_empty_population.sh
+  slurm_job_id: none
+  pwd: /home/mmore500/2023-05-10/multicell-parasite/work
