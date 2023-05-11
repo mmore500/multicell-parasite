@@ -132,24 +132,24 @@ EOF
 OUTPUT_PATH="${HOME}/scratch/multicell-parasite/data/runmode=production/stage=02+what=select_host_prototypes/latest/"
 echo "OUTPUT_PATH ${OUTPUT_PATH}"
 
-OUTPUT_PROVLOG_GLOB="${OUTPUT_PATH}/**/host_prototype.org.provlog.yaml"
-echo "OUTPUT_PROVLOG_GLOB ${OUTPUT_PROVLOG_GLOB}"
+OUTPUT_ORG_GLOB="${OUTPUT_PATH}/**/host_prototype.org"
+echo "OUTPUT_ORG_GLOB ${OUTPUT_ORG_GLOB}"
 
-for output_provlog in ${OUTPUT_PROVLOG_GLOB}; do
+for output_org in ${OUTPUT_ORG_GLOB}; do
 
 # create provlog
-cat << EOF >> "${OUTPUT_PATH}/host_prototype.org.provlog.yaml"
+cat << EOF >> "${output_org}.provlog.yaml"
 -
   a: host_prototype.org.provlog.yaml
   stage: 2
   date: $(date --iso-8601=seconds)
   hostname: $(hostname)
-  path: ${output_provlog}
+  path: ${output_org}.provlog.yaml
   revision: ${REVISION}
   runmode: ${RUNMODE}
   user: $(whoami)
   uuid: $(uuidgen)
-  shasum256: $(shasum -a256 ${output_provlog} | cut -d " " -f1)
+  shasum256: $(shasum -a256 ${output_org} | cut -d " " -f1)
   slurm_job_id: ${SLURM_JOB_ID-none}
 EOF
 
