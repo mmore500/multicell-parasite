@@ -64,7 +64,10 @@ for replicate_path in "${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE
   GENOME="$(head -n 1 "${DATA_PATH}/host_genome_list.5000.dat")"
   echo "GENOME ${GENOME}"
 
-  OUTPUT_PATH="$(perl -pe 's|\Q/stage=00+what=evolve_host_prototypes/\E|/stage=01+what=extract_host_prototypes/|g' - <<< "${replicate_path}")"
+  TASKS_KEYNAME="$(grep -oP 'tasks=[^/]*' <<< "${replicate_path}")"
+  echo "TASKS_KEYNAME ${TASKS_KEYNAME}"
+
+  OUTPUT_PATH="${BATCH_PATH}/${TASKS_KEYNAME}"
   echo "OUTPUT_PATH ${OUTPUT_PATH}"
 
   mkdir -p "${OUTPUT_PATH}"
