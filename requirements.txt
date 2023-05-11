@@ -12,6 +12,8 @@ anytree==2.8.0
     # via
     #   alifedata-phyloinformatics-convert
     #   hstrat
+avidascripts @ git+https://github.com/mmore500/AvidaScripts.git@v0.1.1
+    # via -r requirements.in
 biopython==1.81
     # via
     #   alifedata-phyloinformatics-convert
@@ -76,6 +78,7 @@ markupsafe==2.1.2
     # via jinja2
 matplotlib==3.7.1
     # via
+    #   avidascripts
     #   hstrat
     #   seaborn
     #   teeplot
@@ -101,6 +104,7 @@ numpy==1.21.6
     # via
     #   -r requirements.in
     #   alifedata-phyloinformatics-convert
+    #   avidascripts
     #   biopython
     #   contourpy
     #   hstrat
