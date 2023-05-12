@@ -138,6 +138,35 @@ STERILIZE_UNSTABLE 1
 # PARASITE CONFIGURATION
 #------------------------------------------------------------------------------
 
+# Don't reset host thread upon infection
+# What should happen to a parasite when it gives birth?
+# 0 = Leave the parasite thread state untouched.
+# 1 = Resets the state of the calling thread (for SMT parasites, this must be 1)
+INJECT_METHOD 1
+
+# 0: Infection always succeeds.
+# 1: Infection succeeds if parasite matches at least one host task
+# 2: Infection succeeds if parasite does NOT match at least one task
+# 3: Parasite tasks must match host tasks exactly (Matching Alleles)
+INFECTION_MECHANISM 1
+
+# If set to 1, at least one reaction is required for a successful divide
+REQUIRE_SINGLE_REACTION 1
+
+# Infection causes host steralization and takes all cpu cycles
+# (setting this to 1 will override inject_virulence)
+INJECT_IS_VIRULENT 0
+
+# The probabalistic percentage of cpu cycles allocated to the parasite instead of the host.
+# Ensure INJECT_IS_VIRULENT is set to 0.
+# This only works for single infection at the moment.
+# Note that this should be set to a default even if virulence is evolving.
+PARASITE_VIRULENCE 0.85
+
+# Maximum number of Threads a CPU can spawn
+MAX_CPU_THREADS 2
+
+
 #include INST_SET=instset-transsmt.cfg
 EOF
 #______________________________________________________________________________
@@ -171,7 +200,7 @@ fi
 #==============================================================================
 echo events.cfg
 #==============================================================================
-export DEME_RESEED_PERIOD="${DEME_RESEED_PERIOD:-50}"
+export DEME_RESEED_PERIOD="${DEME_RESEED_PERIOD:-500}"
 echo "DEME_RESEED_PERIOD ${DEME_RESEED_PERIOD}"
 
 export ANCESTRAL_HOST_ORG_PATHS="${ANCESTRAL_HOST_ORG_PATHS:-host-smt.org}"
@@ -233,7 +262,7 @@ $(
   done
 )
 
-u 5000 InjectParasite parasite-smt.org ABB 0 10
+u 250:250 InjectParasite parasite-smt.org ABB 0 3600
 
 u 5000 PrintHostPhenotypeData
 u 5000 PrintParasitePhenotypeData
