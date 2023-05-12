@@ -7,10 +7,10 @@ echo "NUM_DEMES ${NUM_DEMES}"
 export RANDOM_SEED="${RANDOM_SEED:-1}"
 echo "RANDOM_SEED ${RANDOM_SEED}"
 
-export WORLD_X="${WORLD_X:-60}"
+export WORLD_X="${WORLD_X:-10}"
 echo "WORLD_X ${WORLD_X}"
 
-export WORLD_Y="${WORLD_Y:-60}"
+export WORLD_Y="${WORLD_Y:-360}"
 echo "WORLD_Y ${WORLD_Y}"
 
 #==============================================================================
