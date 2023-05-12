@@ -181,6 +181,11 @@ export NUM_ANCESTRAL_HOST_ORG_PATHS="$(echo ANCESTRAL_HOST_ORG_PATHS | wc -w)"
 echo "NUM_ANCESTRAL_HOST_ORG_PATHS ${NUM_ANCESTRAL_HOST_ORG_PATHS}"
 
 echo "NUM_DEMES ${NUM_DEMES}"
+HALF_NUM_DEMES="$((NUM_DEMES / 2))"
+echo "HALF_NUM_DEMES ${HALF_NUM_DEMES}"
+
+echo "WORLD_X ${WORLD_X}"
+echo "WORLD_Y ${WORLD_Y}"
 
 export WORLD_SIZE="$((WORLD_X * WORLD_Y))"
 echo "WORLD_SIZE ${WORLD_SIZE}"
@@ -205,15 +210,25 @@ i SetFracDemeTreatable 1.0
 i LoadPopulation host-parasite-smt.spop
 
 i KillDemePercent 1.0 0
-i Inject ${ANCESTRAL_HOST_ORG_PATHS%% *} 0
+i Inject host-smt.org 0
+i Inject ${ANCESTRAL_HOST_ORG_PATHS%% *} $((WORLD_SIZE / 2))
 
 $(
-  for ((deme=0; deme<${NUM_DEMES}; deme++)); do
-    host_org_idx="$((deme % NUM_ANCESTRAL_HOST_ORG_PATHS))"
-    ancestral_host_org_path="$(echo ${ANCESTRAL_HOST_ORG_PATHS} | cut -d " " -f "$((host_org_idx + 1))")"
-    reseed_period_offset="$(( deme ? DEME_RESEED_PERIOD * deme / NUM_DEMES : DEME_RESEED_PERIOD))"
+  for ((deme=0; deme<${HALF_NUM_DEMES}; deme++)); do
+    reseed_period_offset="$(( deme ? DEME_RESEED_PERIOD * deme / HALF_NUM_DEMES : DEME_RESEED_PERIOD))"
     target_cell_idx="$(( deme * WORLD_SIZE / NUM_DEMES ))"
     echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} KillDemePercent 1.0 ${deme}"
+    echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} Inject host-smt.org ${target_cell_idx}"
+  done
+)
+
+$(
+  for ((deme=0; deme<${HALF_NUM_DEMES}; deme++)); do
+    host_org_idx="$((deme % NUM_ANCESTRAL_HOST_ORG_PATHS))"
+    ancestral_host_org_path="$(echo ${ANCESTRAL_HOST_ORG_PATHS} | cut -d " " -f "$((host_org_idx + 1))")"
+    reseed_period_offset="$(( deme ? DEME_RESEED_PERIOD * deme / HALF_NUM_DEMES : DEME_RESEED_PERIOD))"
+    target_cell_idx="$(( (deme + HALF_NUM_DEMES) * WORLD_SIZE / NUM_DEMES))"
+    echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} KillDemePercent 1.0 $((deme + HALF_NUM_DEMES))"
     echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} Inject ${ancestral_host_org_path} ${target_cell_idx}"
   done
 )
