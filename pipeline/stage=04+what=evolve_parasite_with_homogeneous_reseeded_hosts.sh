@@ -1,0 +1,135 @@
+#!/bin/bash
+
+cd "$(dirname "$0")"
+
+source snippets/setup_instrumentation.sh
+
+RUNMODE="${1}"
+echo "RUNMODE ${RUNMODE}"
+
+ATTEMPT="${2}"
+echo "ATTEMPT ${ATTEMPT}"
+
+REVISION="$(git rev-parse --short HEAD)"
+echo "REVISION ${REVISION}"
+
+BATCH="date=$(date +%Y-%m-%d)+time=$(date +%H-%M-%S)+revision=${REVISION}+uuid=$(uuidgen)"
+echo "BATCH ${BATCH}"
+
+source snippets/setup_production_dependencies.sh
+
+echo "PWD ${PWD}"
+
+CONFIG_AND_RUN="$(
+  cat ../cfg/a=periodic-deme-reseed+what=config-and-run.sh | sed 's/^/  /'
+)"
+
+CONTINUATION_TEMPLATE="$(
+  cat stage=04+what=evolve_parasite_with_homogeneous_reseed/evolve_parasite_with_homogeneous_reseeded_hosts.slurm.sh.jinja | sed 's/^/  /'
+)"
+
+INSTALL_AVIDA_SNIPPET="$(
+  cat snippets/install_avida.sh | sed 's/^/  /'
+)"
+SETUP_INSTRUMENTATION_SNIPPET="$(
+  cat snippets/setup_instrumentation.sh | sed 's/^/  /'
+)"
+SETUP_PRODUCTION_DEPENDENCIES_SNIPPET="$(
+  cat snippets/setup_production_dependencies.sh | sed 's/^/  /'
+)"
+
+SBATCH_SCRIPT_DIRECTORY_PATH="$(mktemp -d)"
+echo "SBATCH_SCRIPT_DIRECTORY_PATH ${SBATCH_SCRIPT_DIRECTORY_PATH}"
+
+NUM_REPS=5
+echo "NUM_REPS ${NUM_REPS}"
+
+HOST_PROTOTYPE_GLOB="${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE}/stage=03+what=translate_host_prototypes/latest/tasks=*/host_prototype.org"
+echo "HOST_PROTOTYPE_GLOB ${HOST_PROTOTYPE_GLOB}"
+
+# adapted from https://superuser.com/a/284226
+# generated using script/pick_resource_combos.py
+for replicate in $(seq "${NUM_REPS}"); do
+echo "replicate ${replicate}"
+for host_prototype in ${HOST_PROTOTYPE_GLOB}; do
+  echo "host_prototype ${host_prototype}"
+  SBATCH_SCRIPT_PATH="${SBATCH_SCRIPT_DIRECTORY_PATH}/$(uuidgen).slurm.sh"
+  echo "SBATCH_SCRIPT_PATH ${SBATCH_SCRIPT_PATH}"
+  j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "stage=04+what=evolve_parasite_with_homogeneous_reseeded_hosts/evolve_parasite_with_homogeneous_reseeded_hosts.slurm.sh.jinja" << J2_HEREDOC_EOF
+attempt: ${ATTEMPT}
+batch: ${BATCH}
+config_and_run: |
+${CONFIG_AND_RUN}
+continuation_template: |
+${CONTINUATION_TEMPLATE}
+epoch: 0
+install_avida: |
+${INSTALL_AVIDA_SNIPPET}
+host_prototype_path: $(readlink -f "${host_prototype}")
+load_population_path: |
+  LOAD_POPULATION_PATH="\$(mktemp)"
+  for try in {0..9}; do
+    URL="https://raw.githubusercontent.com/mmore500/multicell-parasite/${REVISION}/cfg/smt-empty.spop"
+    echo "URL \${URL}"
+    curl -L -o "\${LOAD_POPULATION_PATH}" "\${URL}" && break
+    echo "curl failed (try \${try})"
+    SLEEP_DURATION="\$((RANDOM % 10 + 1))"
+    echo "sleeping \${SLEEP_DURATION} then retrying"
+    sleep "\${SLEEP_DURATION}"
+  done
+load_population_provlog_path: |
+  LOAD_POPULATION_PROVLOG_PATH="\$(mktemp)"
+  for try in {0..9}; do
+    URL="https://raw.githubusercontent.com/mmore500/multicell-parasite/${REVISION}/cfg/smt-empty.spop.provlog.yaml"
+    echo "URL \${URL}"
+    curl -L -o "\${LOAD_POPULATION_PROVLOG_PATH}" "\${URL}" && break
+    echo "curl failed (try \${try})"
+    SLEEP_DURATION="\$((RANDOM % 10 + 1))"
+    echo "sleeping \${SLEEP_DURATION} then retrying"
+    sleep "\${SLEEP_DURATION}"
+  done
+replicate: ${replicate}
+revision: ${REVISION}
+runmode: ${RUNMODE}
+setup_instrumentation: |
+${SETUP_INSTRUMENTATION_SNIPPET}
+setup_production_dependencies: |
+${SETUP_PRODUCTION_DEPENDENCIES_SNIPPET}
+tasks_slug: $(grep -oP 'tasks=[^/]*' <<< "${host_prototype}" | keyname extract tasks)
+tasks_configuration: |
+  RESOURCE resECHO:inflow=125:outflow=0.10
+
+  REACTION NAND nand process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION NOT not process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION ORN orn process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3BO logic_3BO process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION AND and process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3CI logic_3CI process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION ANDN andn process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3BZ logic_3BZ process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3AG logic_3AG process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION OR or process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3CP logic_3CP process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3BY logic_3BY process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION NOR nor process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3BS logic_3BS process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3BA logic_3BA process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3CJ logic_3CJ process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3AH logic_3AH process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3AQ logic_3AQ process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3CN logic_3CN process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3CB logic_3CB process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3AX logic_3AX process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3AR logic_3AR process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3AO logic_3AO process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3CH logic_3CH process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+  REACTION LOG3CC logic_3CC process:resource=resECHO:value=1.0:type=pow:frac=1.0:min=0:max=1:  requisite:reaction_max_count=1
+J2_HEREDOC_EOF
+chmod +x "${SBATCH_SCRIPT_PATH}"
+
+done
+done \
+  | tqdm \
+    --desc "instantiate slurm scripts" \
+
+find "${SBATCH_SCRIPT_DIRECTORY_PATH}" -type f | xargs -L 1 sbatch
