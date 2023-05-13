@@ -64,26 +64,14 @@ ${INSTALL_AVIDA_SNIPPET}
 host_prototype_path: $(readlink -f "${host_prototype}")
 load_population_path: |
   LOAD_POPULATION_PATH="\$(mktemp)"
-  for try in {0..9}; do
-    URL="https://raw.githubusercontent.com/mmore500/multicell-parasite/${REVISION}/cfg/smt-empty.spop"
-    echo "URL \${URL}"
-    curl -L -o "\${LOAD_POPULATION_PATH}" "\${URL}" && break
-    echo "curl failed (try \${try})"
-    SLEEP_DURATION="\$((RANDOM % 10 + 1))"
-    echo "sleeping \${SLEEP_DURATION} then retrying"
-    sleep "\${SLEEP_DURATION}"
-  done
+  cat << _EOF_ > "\${LOAD_POPULATION_PATH}"
+  $(cat ../cfg/smt-empty.spop | sed 's/^/  /')
+  _EOF_
 load_population_provlog_path: |
   LOAD_POPULATION_PROVLOG_PATH="\$(mktemp)"
-  for try in {0..9}; do
-    URL="https://raw.githubusercontent.com/mmore500/multicell-parasite/${REVISION}/cfg/smt-empty.spop.provlog.yaml"
-    echo "URL \${URL}"
-    curl -L -o "\${LOAD_POPULATION_PROVLOG_PATH}" "\${URL}" && break
-    echo "curl failed (try \${try})"
-    SLEEP_DURATION="\$((RANDOM % 10 + 1))"
-    echo "sleeping \${SLEEP_DURATION} then retrying"
-    sleep "\${SLEEP_DURATION}"
-  done
+  cat << _EOF_ > "\${LOAD_POPULATION_PROVLOG_PATH}"
+  $(cat ../cfg/smt-empty.spop.provlog.yaml | sed 's/^/  /')
+  _EOF_
 replicate: ${replicate}
 revision: ${REVISION}
 runmode: ${RUNMODE}
