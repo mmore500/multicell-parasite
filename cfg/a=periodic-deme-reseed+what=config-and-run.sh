@@ -262,8 +262,8 @@ $(
   done
 )
 
-u 0 InjectParasite parasite-smt.org ABB 0 100
-u 2500 InjectParasite parasite-smt.org ABB 100 200
+u 1000 InjectParasite parasite-smt.org ABB 0 100
+u 2000 InjectParasite parasite-smt.org ABB 100 200
 
 u 10000 PrintHostPhenotypeData
 u 10000 PrintParasitePhenotypeData
