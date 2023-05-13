@@ -13,6 +13,11 @@ echo "JOBSCRIPT_PATH ${JOBSCRIPT_PATH}"
 mkdir -p "${HOME}/jobscript" || :
 cp "${JOBSCRIPT_PATH}" "${HOME}/jobscript/$(date '+%Y%m%d-%H%M')-${SLURM_JOB_ID:-none}.slurm.sh" || :
 
+mkdir -p "${HOME}/jobcont" || :
+export JOBCONT_PATH="${HOME}/jobcont/$(date '+%Y%m%d-%H%M')-${SLURM_JOB_ID:-none}.slurm.sh"
+echo "JOBCONT_PATH ${JOBCONT_PATH}"
+touch "${JOBCONT_PATH}"
+
 err() {
     echo "Error occurred:"
     awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L="$1" "$0"
