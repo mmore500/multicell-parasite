@@ -77,7 +77,7 @@ DEMES_MAX_BIRTHS 0
 DEMES_MIGRATION_METHOD 4
 
 # Probability of a parasite migrating to a different deme
-DEMES_PARASITE_MIGRATION_RATE 0.002
+DEMES_PARASITE_MIGRATION_RATE 0.05
 
 # Probability of an offspring being born in a different deme.
 DEMES_MIGRATION_RATE 0.0
