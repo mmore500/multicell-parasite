@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cd "$(dirname "$0")"
+source "$(dirname "$0")/snippets/setup_instrumentation.sh"
 
-source snippets/setup_instrumentation.sh
+cd "$(dirname "$0")"
 
 RUNMODE="${1}"
 echo "RUNMODE ${RUNMODE}"
