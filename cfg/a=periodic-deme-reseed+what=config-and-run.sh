@@ -200,7 +200,7 @@ fi
 #==============================================================================
 echo events.cfg
 #==============================================================================
-export DEME_RESEED_PERIOD="${DEME_RESEED_PERIOD:-500}"
+export DEME_RESEED_PERIOD="${DEME_RESEED_PERIOD:-5000}"
 echo "DEME_RESEED_PERIOD ${DEME_RESEED_PERIOD}"
 
 export ANCESTRAL_HOST_ORG_PATHS="${ANCESTRAL_HOST_ORG_PATHS:-host-smt.org}"
@@ -262,28 +262,29 @@ $(
   done
 )
 
-u 250:250 InjectParasite parasite-smt.org ABB 0 3600
+u 0 InjectParasite parasite-smt.org ABB 0 100
+u 2500 InjectParasite parasite-smt.org ABB 100 200
 
-u 5000 PrintHostPhenotypeData
-u 5000 PrintParasitePhenotypeData
+u 10000 PrintHostPhenotypeData
+u 10000 PrintParasitePhenotypeData
 
-u 5000 DumpHostGenotypeList
-u 5000 DumpParasiteGenotypeList
+u 10000 DumpHostGenotypeList
+u 10000 DumpParasiteGenotypeList
 
-u 5000 DumpHostTaskGrid
-u 5000 DumpParasiteTaskGrid
+u 10000 DumpHostTaskGrid
+u 10000 DumpParasiteTaskGrid
 
-u 5000 PrintHostTasksData
-u 5000 PrintParasiteTasksData
+u 10000 PrintHostTasksData
+u 10000 PrintParasiteTasksData
 
-u 5000 PrintParasiteData ParasiteData.dat
-u 5000 PrintAverageData       # Save info about the average genotypes
-u 5000 PrintCountData         # Count organisms, genotypes, species, etc.
-u 5000 PrintTimeData          # Track time conversion (generations, etc.)
+u 10000 PrintParasiteData ParasiteData.dat
+u 10000 PrintAverageData       # Save info about the average genotypes
+u 10000 PrintCountData         # Count organisms, genotypes, species, etc.
+u 10000 PrintTimeData          # Track time conversion (generations, etc.)
+u 10000 PrintMigrationData
+u 10000 SavePopulation
 
-u 5000 SavePopulation
-
-u 5000 Exit
+u 10000 Exit
 
 EOF
 #______________________________________________________________________________
