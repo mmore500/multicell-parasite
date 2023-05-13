@@ -13,9 +13,6 @@ echo "ATTEMPT ${ATTEMPT}"
 REVISION="$(git rev-parse --short HEAD)"
 echo "REVISION ${REVISION}"
 
-BATCH="date=$(date +%Y-%m-%d)+time=$(date +%H-%M-%S)+revision=${REVISION}+uuid=$(uuidgen)"
-echo "BATCH ${BATCH}"
-
 source snippets/setup_production_dependencies.sh
 
 echo "PWD ${PWD}"
@@ -57,7 +54,6 @@ for host_prototype in ${HOST_PROTOTYPE_GLOB}; do
   echo "SBATCH_SCRIPT_PATH ${SBATCH_SCRIPT_PATH}"
   j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "stage=04+what=evolve_parasite_with_homogeneous_reseeded_hosts/evolve_parasite_with_homogeneous_reseeded_hosts.slurm.sh.jinja" << J2_HEREDOC_EOF
 attempt: ${ATTEMPT}
-batch: ${BATCH}
 config_and_run: |
 ${CONFIG_AND_RUN}
 continuation_template: |

@@ -15,14 +15,15 @@
 
 {{ setup_instrumentation }}
 
-BATCH="{{ batch }}"
-echo "BATCH ${BATCH}"
 
 RUNMODE="{{ runmode }}"
 echo "RUNMODE ${RUNMODE}"
 
 REVISION="{{ revision }}"
 echo "REVISION ${REVISION}"
+
+BATCH="date=$(date +%Y-%m-%d)+time=$(date +%H-%M-%S)+revision=${REVISION}+uuid=$(uuidgen)"
+echo "BATCH ${BATCH}"
 
 EPOCH="{{ epoch }}"
 echo "EPOCH ${EPOCH}"
@@ -144,7 +145,7 @@ while :; do
 -
   a: provlog.yaml
   attempt: {{ attempt }}
-  batch: {{ batch }}
+  batch: ${BATCH}
   stage: 0
   date: \$(date --iso-8601=seconds)
   epoch: \${EPOCH_COUNTER}
@@ -215,7 +216,6 @@ echo load_population_path: LOAD_POPULATION_PATH="${LOAD_POPULATION_PATH}"
 echo load_population_provlog_path: LOAD_POPULATION_PROVLOG_PATH="${LOAD_POPULATION_PROVLOG_PATH}"
 cat << 'J2_HEREDOC_EOF_{{ "instantiated" }}'
 attempt: {{ attempt }}
-batch: {{ batch }}
 config_and_run: |
 {{ config_and_run | indent(2, first=True) }}
 continuation_template: |
