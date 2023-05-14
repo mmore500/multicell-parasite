@@ -13,8 +13,10 @@
 # Job may be requeued after node failure.
 #SBATCH --requeue
 
-{{ setup_instrumentation }}
+export STAGE="04"
+echo "STAGE ${STAGE}"
 
+{{ setup_instrumentation }}
 
 RUNMODE="{{ runmode }}"
 echo "RUNMODE ${RUNMODE}"

@@ -13,6 +13,9 @@
 # Job may be requeued after node failure.
 #SBATCH --requeue
 
+export STAGE="00"
+echo "STAGE ${STAGE}"
+
 {{ setup_instrumentation }}
 
 BATCH="{{ batch }}"

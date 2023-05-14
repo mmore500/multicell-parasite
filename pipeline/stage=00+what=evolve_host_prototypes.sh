@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export STAGE="00"
+echo "STAGE ${STAGE}"
+
 source "$(dirname "$0")/snippets/setup_instrumentation.sh"
 
 cd "$(dirname "$0")"

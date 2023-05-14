@@ -14,10 +14,10 @@ export JOBSCRIPT_PATH="$(readlink -f "${JOBSCRIPT_PATH}")"
 echo "JOBSCRIPT_PATH ${JOBSCRIPT_PATH}"
 
 mkdir -p "${HOME}/jobscript" || :
-cp "${JOBSCRIPT_PATH}" "${HOME}/jobscript/$(date '+%Y%m%d-%H%M')-${SLURM_JOB_ID:-none}.slurm.sh" || :
+cp "${JOBSCRIPT_PATH}" "${HOME}/jobscript/id=${SLURM_JOB_ID:-none}+stage=${STAGE}+ext=.slurm.sh" || :
 
 mkdir -p "${HOME}/jobcont" || :
-export JOBCONT_PATH="${HOME}/jobcont/$(date '+%Y%m%d-%H%M')-${SLURM_JOB_ID:-none}.slurm.sh"
+export JOBCONT_PATH="${HOME}/jobcont/id=${SLURM_JOB_ID:-none}+stage=${STAGE}+ext=.slurm.sh"
 echo "JOBCONT_PATH ${JOBCONT_PATH}"
 touch "${JOBCONT_PATH}"
 
