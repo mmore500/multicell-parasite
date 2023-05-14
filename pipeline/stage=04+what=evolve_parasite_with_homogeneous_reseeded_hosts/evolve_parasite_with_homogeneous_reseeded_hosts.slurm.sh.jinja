@@ -248,8 +248,8 @@ J2_HEREDOC_EOF_{{ "instantiated" }}
 chmod +x "${JOBCONT_PATH}"
 
 for try in {0..9}; do
-  sbatch "${SBATCH_SCRIPT_PATH}" && break
-  echo "sbatch \"${SBATCH_SCRIPT_PATH}\" failed (try ${try})"
+  sbatch "${JOBCONT_PATH}" && break
+  echo "sbatch \"${JOBCONT_PATH}\" failed (try ${try})"
   SLEEP_DURATION="$((RANDOM % 10 + 1))"
   echo "sleeping ${SLEEP_DURATION} then retrying"
   sleep "${SLEEP_DURATION}"
