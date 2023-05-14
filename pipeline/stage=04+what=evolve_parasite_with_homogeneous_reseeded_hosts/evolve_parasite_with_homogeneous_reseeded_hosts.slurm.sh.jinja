@@ -219,8 +219,7 @@ cat << 'CONTINUATION_TEMPLATE_HEREDOC_{{ "instantiated" }}' > "${CONTINUATION_TE
 {{ continuation_template }}
 CONTINUATION_TEMPLATE_HEREDOC_{{ "instantiated" }}
 
-SBATCH_SCRIPT_PATH="$(mktemp)"
-echo "SBATCH_SCRIPT_PATH ${SBATCH_SCRIPT_PATH}"
+echo "JOBCONT_PATH ${JOBCONT_PATH}"
 {
 echo "epoch: ${EPOCH_COUNTER}"
 echo load_population_path: LOAD_POPULATION_PATH="${LOAD_POPULATION_PATH}"
@@ -245,10 +244,8 @@ tasks_configuration: |
 {{ tasks_configuration | indent(2, first=True) }}
 tasks_slug: {{ tasks_slug }}
 J2_HEREDOC_EOF_{{ "instantiated" }}
-}| j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "${CONTINUATION_TEMPLATE_PATH}"
-chmod +x "${SBATCH_SCRIPT_PATH}"
-
-cp "${SBATCH_SCRIPT_PATH}" "${JOBCONT_PATH}"
+}| j2 --format=yaml -o "${JOBCONT_PATH}" "${CONTINUATION_TEMPLATE_PATH}"
+chmod +x "${JOBCONT_PATH}"
 
 for try in {0..9}; do
   sbatch "${SBATCH_SCRIPT_PATH}" && break
