@@ -4,6 +4,9 @@ set -e
 set -o nounset
 shopt -s globstar
 
+ln -s "${HOME}/scratch" "/mnt/scratch/${USER}/" || :
+mkdir -p "${HOME}/joblog" || :
+
 export JOBSCRIPT_PATH="$0"
 echo "JOBSCRIPT_PATH ${JOBSCRIPT_PATH}"
 readlink -f "${JOBSCRIPT_PATH}"
