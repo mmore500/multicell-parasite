@@ -41,7 +41,7 @@ SETUP_PRODUCTION_DEPENDENCIES_SNIPPET="$(
 SBATCH_SCRIPT_DIRECTORY_PATH="$(mktemp -d)"
 echo "SBATCH_SCRIPT_DIRECTORY_PATH ${SBATCH_SCRIPT_DIRECTORY_PATH}"
 
-NUM_REPS=5
+NUM_REPS=40
 echo "NUM_REPS ${NUM_REPS}"
 
 HOST_PROTOTYPE_DIR_GLOB="${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE}/stage=05+what=prepare_host_protopopulations/latest/tasks=*/"
@@ -52,7 +52,7 @@ echo "host_prototype_paths ${host_prototype_paths}"
 
 # adapted from https://superuser.com/a/284226
 # generated using script/pick_resource_combos.py
-for replicate in $(seq 540); do
+for replicate in $(seq "${NUM_REPS}"); do
 echo "replicate ${replicate}"
   SBATCH_SCRIPT_PATH="${SBATCH_SCRIPT_DIRECTORY_PATH}/$(uuidgen).slurm.sh"
   echo "SBATCH_SCRIPT_PATH ${SBATCH_SCRIPT_PATH}"
