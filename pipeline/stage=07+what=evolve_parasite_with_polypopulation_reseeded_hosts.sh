@@ -47,16 +47,13 @@ echo "NUM_REPS ${NUM_REPS}"
 HOST_PROTOTYPE_DIR_GLOB="${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE}/stage=05+what=prepare_host_protopopulations/latest/tasks=*/"
 echo "HOST_PROTOTYPE_DIR_GLOB ${HOST_PROTOTYPE_DIR_GLOB}"
 
-cur_rep=0
-
 host_prototype_paths="$(for i in {1..40}; do for host_prototype_dir in ${HOST_PROTOTYPE_DIR_GLOB}; do ls -1d "${host_prototype_dir}/"*".org" | shuf --random-source=<(yes "seed${i}" | head -n 100) | awk "NR == $i" | tr '\n' ' '; done; done)"
 echo "host_prototype_paths ${host_prototype_paths}"
 
 # adapted from https://superuser.com/a/284226
 # generated using script/pick_resource_combos.py
-for replicate in $(seq "${NUM_REPS}"); do
+for replicate in $(seq 540); do
 echo "replicate ${replicate}"
-for unused in ${HOST_PROTOTYPE_DIR_GLOB}; do
   SBATCH_SCRIPT_PATH="${SBATCH_SCRIPT_DIRECTORY_PATH}/$(uuidgen).slurm.sh"
   echo "SBATCH_SCRIPT_PATH ${SBATCH_SCRIPT_PATH}"
   j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "stage=07+what=evolve_parasite_with_polypopulation_reseeded_hosts/evolve_parasite_with_polypopulation_reseeded_hosts.slurm.sh.jinja" << J2_HEREDOC_EOF
@@ -79,7 +76,7 @@ load_population_provlog_path: |
   cat << _EOF_ > "\${LOAD_POPULATION_PROVLOG_PATH}"
   $(cat ../cfg/smt-empty.spop.provlog.yaml | sed 's/^/  /')
   _EOF_
-replicate: ${cur_rep}
+replicate: ${replicate}
 revision: ${REVISION}
 runmode: ${RUNMODE}
 setup_instrumentation: |
@@ -118,9 +115,6 @@ tasks_configuration: |
 J2_HEREDOC_EOF
 chmod +x "${SBATCH_SCRIPT_PATH}"
 
-((cur_rep++))
-
-done
 done \
   | tqdm \
     --desc "instantiate slurm scripts" \
