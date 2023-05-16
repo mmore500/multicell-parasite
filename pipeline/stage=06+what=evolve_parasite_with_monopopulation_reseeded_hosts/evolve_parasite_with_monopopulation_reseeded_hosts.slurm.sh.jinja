@@ -1,0 +1,260 @@
+#!/bin/bash -login
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time={%if 'production' == runmode%}4:00:00{%else%}1:00:00{%endif%}
+#SBATCH --job-name evolve_host_prototypes
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/home/%u/joblog/id=%j+stage=04+ext.txt"
+#SBATCH --mem=4G
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mail-type=FAIL
+# No --mail-user, the default value is the submitting user
+#SBATCH --exclude=csn-002,amr-250
+# Job may be requeued after node failure.
+#SBATCH --requeue
+
+export STAGE="06"
+echo "STAGE ${STAGE}"
+
+{{ setup_instrumentation }}
+
+RUNMODE="{{ runmode }}"
+echo "RUNMODE ${RUNMODE}"
+
+REVISION="{{ revision }}"
+echo "REVISION ${REVISION}"
+
+BATCH="date=$(date +%Y-%m-%d)+time=$(date +%H-%M-%S)+revision=${REVISION}+uuid=$(uuidgen)"
+echo "BATCH ${BATCH}"
+
+EPOCH="{{ epoch }}"
+echo "EPOCH ${EPOCH}"
+
+PREV_EPOCH="{{ epoch - 1 }}"
+echo "PREV_EPOCH ${PREV_EPOCH}"
+
+echo "tasks_slug {{ tasks_slug }}"
+
+{{ setup_production_dependencies }}
+
+{{ install_avida }}
+
+STAGE_PATH="${HOME}/scratch/multicell-parasite/data/runmode={{ runmode }}/stage=06+what=evolve_parasite_with_monopopulation_reseeded_hosts/alph=$(python3 -m alphinity {{ replicate }})+replicate={{ replicate }}+tasks={{ tasks_slug }}/"
+echo "STAGE_PATH ${STAGE_PATH}"
+
+export ATTEMPT_PATH="${STAGE_PATH}/attempts/alph=$(python3 -m alphinity {{ attempt }})+attempt={{ attempt }}/"
+echo "ATTEMPT_PATH ${ATTEMPT_PATH}"
+
+# create data directory
+for try in {0..9}; do
+  mkdir -p "${ATTEMPT_PATH}" && break
+  echo "mkdir -p ${ATTEMPT_PATH} failed (try ${try})"
+  SLEEP_DURATION="$((RANDOM % 10 + 1))"
+  echo "sleeping ${SLEEP_DURATION} then retrying"
+  sleep "${SLEEP_DURATION}"
+done
+
+# symlink ATTEMPT to STAGE/latest
+for try in {0..9}; do
+  ln -srfT "${ATTEMPT_PATH}" "${STAGE_PATH}/latest" && break
+  echo "ln -srfT ${ATTEMPT_PATH} ${STAGE_PATH}/latest failed (try ${try})"
+  echo "removing ${STAGE_PATH}/latest"
+  rm -rf "${STAGE_PATH}/latest"
+  SLEEP_DURATION="$((RANDOM % 10 + 1))"
+  echo "sleeping ${SLEEP_DURATION} then retrying"
+  sleep "${SLEEP_DURATION}"
+done
+
+{{ load_population_path }}
+export LOAD_POPULATION_PATH
+echo "LOAD_POPULATION_PATH ${LOAD_POPULATION_PATH}"
+
+{{ load_population_provlog_path }}
+export LOAD_POPULATION_PROVLOG_PATH
+echo "LOAD_POPULATION_PROVLOG_PATH ${LOAD_POPULATION_PROVLOG_PATH}"
+
+TIMEOUT_SECONDS="$(({% if 'production' == runmode %} 4 * {% endif %} 60 * 60 - SECONDS - 300))"
+echo "TIMEOUT_SECONDS ${TIMEOUT_SECONDS}"
+
+export EPOCH_COUNTER={{ epoch }}
+echo "EPOCH_COUNTER ${EPOCH_COUNTER}"
+
+export EPOCH_COUNTER_FILE="$(mktemp)"
+echo "EPOCH_COUNTER_FILE ${EPOCH_COUNTER_FILE}"
+tempfile="$(mktemp)"
+echo "EPOCH_COUNTER=${EPOCH_COUNTER}" > "${tempfile}"
+echo "LOAD_POPULATION_PATH=${LOAD_POPULATION_PATH}" >> "${tempfile}"
+echo "LOAD_POPULATION_PROVLOG_PATH=${LOAD_POPULATION_PROVLOG_PATH}" >> "${tempfile}"
+mv "${tempfile}" "${EPOCH_COUNTER_FILE}"
+
+# used inside configure_and_run
+export ANCESTRAL_HOST_ORG_PATHS="{{ host_prototype_paths }}"
+echo "ANCESTRAL_HOST_ORG_PATHS ${ANCESTRAL_HOST_ORG_PATHS}"
+
+timeout -k 5 --preserve-status "${TIMEOUT_SECONDS}" bash << HEREDOC
+set -e
+set -o nounset
+
+function handle_signals {
+  echo "Received termination signal, exiting gracefully"
+  exit 0
+}
+
+# Set signal handlers for SIGTERM and SIGKILL
+trap 'handle_signals' SIGTERM SIGKILL
+
+while :; do
+  echo "begin epoch \${EPOCH_COUNTER}"
+
+  STEP_PATH="${ATTEMPT_PATH}/alph=\$(python3 -m alphinity \${EPOCH_COUNTER})+epoch=\${EPOCH_COUNTER}"
+  echo "STEP_PATH \${STEP_PATH}"
+
+  BATCH_PATH="\${STEP_PATH}/batches/${BATCH}/"
+  echo "BATCH_PATH \${BATCH_PATH}"
+
+  # create data directory
+  for try in {0..9}; do
+    mkdir -p "\${BATCH_PATH}" && break
+    echo "mkdir -p \${BATCH_PATH} failed (try \${try})"
+    SLEEP_DURATION="\$((RANDOM % 10 + 1))"
+    echo "sleeping \${SLEEP_DURATION} then retrying"
+    sleep "\${SLEEP_DURATION}"
+  done
+
+  # symlink BATCH to STEP/latest
+  for try in {0..9}; do
+    ln -srfT "\${BATCH_PATH}" "\${STEP_PATH}/latest" && break
+    echo "ln -srfT \${BATCH_PATH} \${STEP_PATH}/latest failed (try ${try})"
+    echo "removing \${STEP_PATH}/latest"
+    rm -rf "\${STEP_PATH}/latest"
+    SLEEP_DURATION="\$((RANDOM % 10 + 1))"
+    echo "sleeping \${SLEEP_DURATION} then retrying"
+    sleep "\${SLEEP_DURATION}"
+  done
+
+  cd "\${BATCH_PATH}"
+  echo "PWD \${PWD}"
+
+  # setup job info
+  mkdir job
+  ln -s "joblog/id=${SLURM_JOB_ID-none}+stage=04+ext.txt" "job/log.txt"
+  echo "${SLURM_JOB_ID:-none}" > "job/id.txt"
+  cp "${JOBSCRIPT_PATH}" "job/rerun.slurm.sh"
+  chmod +x "job/rerun.slurm.sh"
+  ln -s "${JOBCONT_PATH}" "job/continue.slurm.sh"
+  chmod +x "job/continue.slurm.sh"
+
+  echo "{{ replicate }}" > "replicate"
+  echo "{{ tasks_slug }}" > "tasks"
+
+  echo "LOAD_POPULATION_PATH \${LOAD_POPULATION_PATH}"
+  echo "LOAD_POPULATION_PROVLOG_PATH \${LOAD_POPULATION_PROVLOG_PATH}"
+
+  # create provlog
+  cp "\${LOAD_POPULATION_PROVLOG_PATH}" "provlog.yaml"
+  cat "${ANCESTRAL_HOST_ORG_PATHS%% *}.provlog.yaml" >> "provlog.yaml"
+  cat << EOF >> "provlog.yaml"
+-
+  a: provlog.yaml
+  attempt: {{ attempt }}
+  batch: ${BATCH}
+  stage: 0
+  date: \$(date --iso-8601=seconds)
+  epoch: \${EPOCH_COUNTER}
+  initial_epoch: {{ epoch }}
+  hostname: $(hostname)
+  replicate: {{ replicate }}
+  revision: {{ revision }}
+  revision_avida: ${AVIDA_REVISION}
+  runmode: {{ runmode }}
+  user: $(whoami)
+  uuid: $(uuidgen)
+  slurm_job_id: ${SLURM_JOB_ID-none}
+  load_population_path: \$(readlink -f "\${LOAD_POPULATION_PATH}")
+  attempt_path: $(readlink -f "${ATTEMPT_PATH}")
+  step_path: \$(readlink -f "\${STEP_PATH}")
+  batch_path: \$(readlink -f "\${BATCH_PATH}")
+EOF
+
+  # deduplicate provlog file
+  # add trailing whitespace to lines that aren't just -
+  # deduplicate records separated by -\n
+  # strip trailing whitespace
+  # drop extra -\n added to end
+  # uses inode trick to read/write from same file safely
+  # https://serverfault.com/a/557566
+  { rm -f provlog.yaml && sed '/.-/ s/\$/ /' | awk 'BEGIN{RS="-\n"; ORS=RS} !a[\$0]++' - | sed 's/[ \t]*\$//' | head -c -2 > provlog.yaml; } < provlog.yaml
+
+  cp "\${LOAD_POPULATION_PATH}" host-parasite-smt.spop
+
+  cat << EOF >> "environment.cfg"
+{{ tasks_configuration }}
+EOF
+
+  export RANDOM_SEED="\$(cksum <<< "{{ tasks_slug }} \${EPOCH_COUNTER}" | cut -f 1 -d ' ')"
+  echo "RANDOM_SEED \${RANDOM_SEED}"
+
+  {{ config_and_run | replace("$", "\$") }}
+
+  LOAD_POPULATION_PATH="\$(echo "\${PWD}/data/"*.spop | xargs readlink -f)"
+  LOAD_POPULATION_PROVLOG_PATH="\$(echo "\${PWD}/provlog.yaml" | xargs readlink -f)"
+
+  echo "end epoch \${EPOCH_COUNTER}"
+  EPOCH_COUNTER=\$((EPOCH_COUNTER + 1))
+
+  tempfile="\$(mktemp)"
+  echo "EPOCH_COUNTER=\${EPOCH_COUNTER}" > "\${tempfile}"
+  echo "LOAD_POPULATION_PATH=\${LOAD_POPULATION_PATH}" >> "\${tempfile}"
+  echo "LOAD_POPULATION_PROVLOG_PATH=\${LOAD_POPULATION_PROVLOG_PATH}" >> "\${tempfile}"
+  mv "\${tempfile}" "\${EPOCH_COUNTER_FILE}"
+done
+HEREDOC
+
+source "${EPOCH_COUNTER_FILE}"
+echo "EPOCH_COUNTER ${EPOCH_COUNTER}"
+echo "LOAD_POPULATION_PATH ${LOAD_POPULATION_PATH}"
+echo "LOAD_POPULATION_PROVLOG_PATH ${LOAD_POPULATION_PROVLOG_PATH}"
+
+CONTINUATION_TEMPLATE_PATH="$(mktemp)"
+cat << 'CONTINUATION_TEMPLATE_HEREDOC_{{ "instantiated" }}' > "${CONTINUATION_TEMPLATE_PATH}"
+{{ continuation_template }}
+CONTINUATION_TEMPLATE_HEREDOC_{{ "instantiated" }}
+
+echo "JOBCONT_PATH ${JOBCONT_PATH}"
+{
+echo "epoch: ${EPOCH_COUNTER}"
+echo load_population_path: LOAD_POPULATION_PATH="${LOAD_POPULATION_PATH}"
+echo load_population_provlog_path: LOAD_POPULATION_PROVLOG_PATH="${LOAD_POPULATION_PROVLOG_PATH}"
+cat << 'J2_HEREDOC_EOF_{{ "instantiated" }}'
+attempt: {{ attempt }}
+config_and_run: |
+{{ config_and_run | indent(2, first=True) }}
+continuation_template: |
+{{ continuation_template | indent(2, first=True) }}
+host_prototype_paths: |
+{{ host_prototype_paths | indent(2, first=True) }}
+install_avida: |
+{{ install_avida | indent(2, first=True) }}
+revision: {{ revision }}
+replicate: {{ replicate }}
+runmode: {{ runmode }}
+setup_instrumentation: |
+{{ setup_instrumentation | indent(2, first=True) }}
+setup_production_dependencies: |
+{{ setup_production_dependencies | indent(2, first=True) }}
+tasks_configuration: |
+{{ tasks_configuration | indent(2, first=True) }}
+tasks_slug: {{ tasks_slug }}
+J2_HEREDOC_EOF_{{ "instantiated" }}
+}| j2 --format=yaml -o "${JOBCONT_PATH}" "${CONTINUATION_TEMPLATE_PATH}"
+chmod +x "${JOBCONT_PATH}"
+
+for try in {0..9}; do
+  sbatch "${JOBCONT_PATH}" && break
+  echo "sbatch \"${JOBCONT_PATH}\" failed (try ${try})"
+  SLEEP_DURATION="$((RANDOM % 10 + 1))"
+  echo "sleeping ${SLEEP_DURATION} then retrying"
+  sleep "${SLEEP_DURATION}"
+done
+
+echo "fin ${0}"
