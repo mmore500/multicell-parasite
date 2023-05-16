@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export STAGE="05"
+export STAGE="$(echo "$0" | keyname extract stage)"
 echo "STAGE ${STAGE}"
 
 source "$(dirname "$0")/snippets/setup_instrumentation.sh"
