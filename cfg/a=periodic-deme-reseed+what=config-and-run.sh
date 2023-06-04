@@ -115,11 +115,11 @@ DIVIDE_INS_PROB 0
 DIVIDE_DEL_PROB 0
 
 # Substitution rate (per site, applied on inject)
-INJECT_MUT_PROB 0.00#5625
+INJECT_MUT_PROB 0.005625
 # Insertion rate (per site, applied on inject)
-INJECT_INS_PROB 0.00#0625
+INJECT_INS_PROB 0.000625
 # Deletion rate (per site, applied on inject)
-INJECT_DEL_PROB 0.00#0625
+INJECT_DEL_PROB 0.000625
 
 # Prob. of copy mutations during germline replication
 GERMLINE_COPY_MUT 0.0
