@@ -93,7 +93,7 @@ for replicate_path in "${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE
 
   seqno=0
   # randomly sample 40 lines
-  # to slow to transform all
+  # too slow to transform all
   for host_prototype_seq in $(shuf -n 49 "${DATA_PATH}/host_genome_list.5000.dat" --random-source=<(yes "${TASKS_KEYNAME}" | head -n 100)); do
     echo "seqno ${seqno}"
     GENOME_PATH="${OUTPUT_PATH}/host_prototype-$(python3 -m alphinity "${seqno}")-${seqno}.org"
