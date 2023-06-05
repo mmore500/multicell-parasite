@@ -262,31 +262,31 @@ $(
   done
 )
 
-u 10000 InjectParasite parasite-smt.org ABB 0 50
-u 20000 InjectParasite parasite-smt.org ABB 100 150
-u 40000 InjectParasite parasite-smt.org ABB 50 100
-u 50000 InjectParasite parasite-smt.org ABB 150 200
+u 1000 InjectParasite parasite-smt.org ABB 0 50
+u 2000 InjectParasite parasite-smt.org ABB 100 150
+u 4000 InjectParasite parasite-smt.org ABB 50 100
+u 5000 InjectParasite parasite-smt.org ABB 150 200
 
-u 100000 PrintHostPhenotypeData
-u 100000 PrintParasitePhenotypeData
+u 10000 PrintHostPhenotypeData
+u 10000 PrintParasitePhenotypeData
 
-u 100000 DumpHostGenotypeList
-u 100000 DumpParasiteGenotypeList
+u 10000 DumpHostGenotypeList
+u 10000 DumpParasiteGenotypeList
 
-u 100000 DumpHostTaskGrid
-u 100000 DumpParasiteTaskGrid
+u 10000 DumpHostTaskGrid
+u 10000 DumpParasiteTaskGrid
 
-u 100000 PrintHostTasksData
-u 100000 PrintParasiteTasksData
+u 10000 PrintHostTasksData
+u 10000 PrintParasiteTasksData
 
-u 100000 PrintParasiteData ParasiteData.dat
-u 100000 PrintAverageData       # Save info about the average genotypes
-u 100000 PrintCountData         # Count organisms, genotypes, species, etc.
-u 100000 PrintTimeData          # Track time conversion (generations, etc.)
-u 100000 PrintMigrationData
-u 100000 SavePopulation
+u 10000 PrintParasiteData ParasiteData.dat
+u 10000 PrintAverageData       # Save info about the average genotypes
+u 10000 PrintCountData         # Count organisms, genotypes, species, etc.
+u 10000 PrintTimeData          # Track time conversion (generations, etc.)
+u 10000 PrintMigrationData
+u 10000 SavePopulation
 
-u 100000 Exit
+u 10000 Exit
 
 EOF
 #______________________________________________________________________________
