@@ -1,3 +1,5 @@
+#!/bin/bash
+
 export TMPDIR="${HOME}/scratch/tmp"
 mkdir -p "${TMPDIR}"
 
