@@ -3,7 +3,7 @@
 export TMPDIR="${HOME}/scratch/tmp"
 mkdir -p "${TMPDIR}"
 
-AVIDA_REVISION="cbf79c18fe5d4e47b5e5ee01a46609d89caf2ea6"
+AVIDA_REVISION="bb2f72741e449ffc065ca4cfc6ced2d21511ce97"
 echo "AVIDA_REVISION ${AVIDA_REVISION}"
 
 while ! [ -L "${TMPDIR}/${AVIDA_REVISION}" ]; do
