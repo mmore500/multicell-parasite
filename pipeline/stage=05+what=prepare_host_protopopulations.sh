@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export STAGE="$(echo "$0" | keyname extract stage)"
+export STAGE="$(echo "$0" | python3 -m keyname.cli extract stage)"
 echo "STAGE ${STAGE}"
 
 source "$(dirname "$0")/snippets/setup_instrumentation.sh"

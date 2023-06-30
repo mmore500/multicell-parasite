@@ -4,7 +4,7 @@ hstrat==1.6.1
 iterpop==0.4.1
 j2cli==0.3.10
 jinja2==3.0.0
-keyname==0.5.2
+keyname==0.5.3
 numpy==1.21.6
 pandas==1.3.5
 python-slugify==7.0
