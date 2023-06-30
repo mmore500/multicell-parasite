@@ -49,24 +49,93 @@ echo "PWD ${PWD}"
 DATA_PATH="${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE}/"
 echo "DATA_PATH ${DATA_PATH}"
 
+MAX_EPOCH=20
+echo "MAX_EPOCH ${MAX_EPOCH}"
+
+# provlog
+python3 - << EOF
+import glob
+import re
+
+import multiprocess as mp
+from keyname import keyname as kn
+from tqdm import tqdm
+
+
+provlog_paths = [*glob.glob(
+    "${DATA_PATH}/stage=06+what=evolve_parasite_with_monopopulation_reseeded_hosts/**/provlog.yaml",
+    recursive=True,
+)] + [*glob.glob(
+    "${DATA_PATH}/stage=07+what=evolve_parasite_with_polypopulation_reseeded_hosts/**/proglog.yaml",
+    recursive=True,
+)]
+
+pool = mp.Pool()
+file_contents = []
+
+def read_file(path):
+    attrs = kn.unpack(path.replace("/", "+"))
+    if int(attrs["epoch"]) < ${MAX_EPOCH}:
+        with open(path, 'r') as file:
+            return file.read()
+    else:
+        return ""
+
+with tqdm(total=len(provlog_paths)) as pbar:
+    for result in pool.imap_unordered(read_file, provlog_paths):
+        file_contents.append(result)
+        pbar.update()
+
+pool.close()
+pool.join()
+
+# Concatenate the file contents and write to destination file
+with open("${BATCH_PATH}/provlog.yaml", "w") as dest_file:
+    dest_file.write("".join(file_contents))
+
+EOF
+echo "provlog concatenated"
+
+cat << EOF >> "${BATCH_PATH}/provlog.yaml"
+-
+  a: $(basename "${BATCH_PATH}.provlog.yaml")
+  batch: ${BATCH}
+  stage: 8
+  date: $(date --iso-8601=seconds)
+  hostname: $(hostname)
+  path: $(realpath ${BATCH_PATH})
+  revision: ${REVISION}
+  runmode: ${RUNMODE}
+  user: $(whoami)
+  uuid: $(uuidgen)
+  slurm_job_id: ${SLURM_JOB_ID-none}
+  batch_path: $(readlink -f "${BATCH_PATH}")
+EOF
+echo "provlog appended"
+
+# deduplicate provlog file
+# add trailing whitespace to lines that aren't just -
+# deduplicate records separated by -\n
+# strip trailing whitespace
+# drop extra -\n added to end
+# uses inode trick to read/write from same file safely
+# https://serverfault.com/a/557566
+{ rm -f "${BATCH_PATH}/provlog.yaml" && sed '/.-/ s/\$/ /' | awk 'BEGIN{RS="-\n"; ORS=RS} !a[$0]++' - | sed 's/[ \t]*\$//' | head -c -2 > "${BATCH_PATH}/provlog.yaml"; } < "${BATCH_PATH}/provlog.yaml"
+echo "provlog deduplicated"
+
+
+# actual data
+echo "compiling collated data.."
 python3 - << EOF
 import glob
 import multiprocessing as mp
 import re
-import shutil
 
 from keyname import keyname as kn
+import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
-grid_dat_paths = [*glob.glob(
-    "${DATA_PATH}/
-    stage=06+what=evolve_parasite_with_monopopulation_reseeded_hosts/**/grid_task*.dat",
-    recursive=True,
-)] + [*glob.glob(
-    "${DATA_PATH}/
-    stage=07+what=evolve_parasite_with_polypopulation_reseeded_hosts/**/grid_task*.dat",
-    recursive=True,
-)]
 
 def process_one_path(path: str) -> pd.DataFrame:
     stint_uid = path
@@ -81,6 +150,11 @@ def process_one_path(path: str) -> pd.DataFrame:
             "what",
         )
     }
+
+    # skip data to keep tractable
+    if int(meta["epoch"]) >= ${MAX_EPOCH}:
+        return pd.DataFrame()
+
     meta["treatment"], = [
         m.group() for m in re.finditer("monopopulation", meta["what"])
     ] + [
@@ -101,7 +175,7 @@ def process_one_path(path: str) -> pd.DataFrame:
                 "tasks",
                 "treatment"
             )
-        }
+        },
     )
 
 
@@ -118,7 +192,7 @@ def process_one_path(path: str) -> pd.DataFrame:
                 "alive": int(entry > 0),
                 "empty": int(entry == -1),
                 "task bitfield" : int((entry > 0) * entry),
-                "num tasks": (entry > 0) * entry.bit_count(),
+                "num tasks": (entry > 0) * int(entry).bit_count(),
                 "row": index,
                 "col": col,
                 "deme": index // 10,
@@ -134,20 +208,39 @@ def process_one_path(path: str) -> pd.DataFrame:
                     **site_data,
                     **task_data,
                     **meta,
-                }
+                },
             )
 
-      dataframes.append(
-          pd.DataFrame.from_records(records)
-      )
+    return pd.DataFrame.from_records(records)
+
+grid_dat_paths = [*glob.glob(
+    "${DATA_PATH}/stage=06+what=evolve_parasite_with_monopopulation_reseeded_hosts/**/grid_task*.dat",
+    recursive=True,
+)] + [*glob.glob(
+    "${DATA_PATH}/stage=07+what=evolve_parasite_with_polypopulation_reseeded_hosts/**/grid_task*.dat",
+    recursive=True,
+)]
 
 pool = mp.Pool()
-dataframes = pool.map(process_one_path, dat_paths)
+dataframes = []
+with tqdm(total=len(grid_dat_paths)) as pbar:
+    for result in pool.imap_unordered(process_one_path, grid_dat_paths):
+        dataframes.append(result)  # Append the returned DataFrame to the list
+        pbar.update()
+
+pool.close()
+pool.join()
 
 master_df = pd.concat(
     dataframes
 ).reset_index(drop=True)
-master_df.to_csv("${DATA_PATH}/collated_grid_task-bycell.csv", index=False)
+print("master dataframe concatenated")
+master_df.to_hdf(
+  "${BATCH_PATH}/collated_grid_task-bycell.h5",
+  key="df",
+  mode="w",
+)
+print("${BATCH_PATH}/collated_grid_task-bycell.h5 saved")
 
 condensed_df = master_df.groupby(
     [
@@ -155,20 +248,22 @@ condensed_df = master_df.groupby(
         "deme",
     ],
 ).max().reset_index()
-condensed_df["alive count"] = master_df.groupby(
-    [
-        "stint_uid",
-        "deme",
-    ],
-).sum().reset_index()["alive"]
-condensed_df["task bitfield"] = master_df.groupby(
-    [
-        "stint_uid",
-        "deme",
-    ],
+print("condensed a")
+
+aggregated_data = master_df.groupby(
+    ["stint_uid", "deme"],
 ).agg(
-    lambda x: np.bitwise_or.reduce(x.values),
-).reset_index()["task bitfield"]
+    {
+      "alive": "sum",
+      "task bitfield": lambda x: np.bitwise_or.reduce(x.values),
+    },
+).reset_index()
+print("condensed b")
+
+condensed_df["alive count"] = aggregated_data["alive"]
+print("condensed c1")
+condensed_df["task bitfield"] = aggregated_data["task bitfield"]
+print("condensed c2")
 
 # Apply logical OR operation across all Series in the list
 condensed_df['any tasks'] = np.logical_or.reduce(
@@ -177,45 +272,21 @@ condensed_df['any tasks'] = np.logical_or.reduce(
     ),
     axis=1,
 )
-df["unique tasks"] = sum(
-    df[f"task {i}"]
+print("condensed d")
+
+condensed_df["unique tasks"] = sum(
+    condensed_df[f"task {i}"]
     for i in range(32)
 )
-condensed_df.to_csv("${DATA_PATH}/collated_grid_task-bydeme.csv", index=False)
+print("condensed e")
+
+
+condensed_df.to_hdf(
+  "${BATCH_PATH}/collated_grid_task-bydeme.h5",
+  key="df",
+  mode="w",
+)
+print("${BATCH_PATH}/collated_grid_task-bydeme.h5 saved")
 EOF
 
-
-find "${DATA_PATH}/stage=06+what=evolve_parasite_with_monopopulation_reseeded_hosts" -name 'provlog.yaml' -print0 -o \
-find "${DATA_PATH}/stage=07+what=evolve_parasite_with_polypopulation_reseeded_hosts" -name 'provlog.yaml' -print0 | \
-xargs -0 cat >> "${DATA_PATH}/provlog.yaml"
-
-cat << EOF >> "${DATA_PATH}/provlog.yaml"
--
-  a: $(basename "${data_file}.provlog.yaml")
-  batch: ${BATCH}
-  stage: 8
-  date: $(date --iso-8601=seconds)
-  hostname: $(hostname)
-  path: $(realpath ${data_file})
-  revision: ${REVISION}
-  runmode: ${RUNMODE}
-  user: $(whoami)
-  uuid: $(uuidgen)
-  shasum256: $(shasum -a256 ${GENOME_PATH} | cut -d " " -f1)
-  slurm_job_id: ${SLURM_JOB_ID-none}
-  batch_path: $(readlink -f "${BATCH_PATH}")
-EOF
-done
-
-# deduplicate provlog file
-# add trailing whitespace to lines that aren't just -
-# deduplicate records separated by -\n
-# strip trailing whitespace
-# drop extra -\n added to end
-# uses inode trick to read/write from same file safely
-# https://serverfault.com/a/557566
-{ rm -f "${DATA_PATH}/provlog.yaml && sed '/.-/ s/\$/ /' | awk 'BEGIN{RS="-\n"; ORS=RS} !a[\$0]++' - | sed 's/[ \t]*\$//' | head -c -2 > "${DATA_PATH}/provlog.yaml; } < "${DATA_PATH}/provlog.yaml
-
-for f in "${DATA_PATH}"/*.csv; do
-  cp "${DATA_PATH}/provlog.yaml" "${f}.provlog.yaml"
-done
+echo "fin"
