@@ -106,7 +106,7 @@ AGE_LIMIT 30
 COPY_MUT_PROB 0
 
 # Substitution rate (per site, applied on divide)
-DIV_MUT_PROB 0.001000
+DIV_MUT_PROB ${DIV_MUT_PROB:-0.001000}
 # Insertion rate (per site, applied on divide)
 DIV_INS_PROB 0.0
 # Deletion rate (per site, applied on divide)
@@ -118,11 +118,11 @@ DIVIDE_INS_PROB 0
 DIVIDE_DEL_PROB 0
 
 # Substitution rate (per site, applied on inject)
-INJECT_MUT_PROB 0.005625
+INJECT_MUT_PROB ${INJECT_MUT_PROB:-0.001000}
 # Insertion rate (per site, applied on inject)
-INJECT_INS_PROB 0.000625
+INJECT_INS_PROB ${INJECT_INS_PROB:-0.001000}
 # Deletion rate (per site, applied on inject)
-INJECT_DEL_PROB 0.000625
+INJECT_DEL_PROB ${INJECT_DEL_PROB:-0.001000}
 
 # Prob. of copy mutations during germline replication
 GERMLINE_COPY_MUT 0.0
