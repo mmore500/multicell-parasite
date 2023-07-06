@@ -257,31 +257,30 @@ $(
   done
 )
 
-${INJECT_PARASITE_ACTION_PREPEND}u 1000 InjectParasite parasite-smt.org ABB 0 50
-${INJECT_PARASITE_ACTION_PREPEND}u 2000 InjectParasite parasite-smt.org ABB 100 150
-${INJECT_PARASITE_ACTION_PREPEND}u 4000 InjectParasite parasite-smt.org ABB 50 100
-${INJECT_PARASITE_ACTION_PREPEND}u 5000 InjectParasite parasite-smt.org ABB 150 200
+${INJECT_PARASITE_ACTION_PREPEND}u 0:1 InjectParasite parasite-smt.org ABB 0 ${WORLD_SIZE} 2 1
+u 0:100 PrintParasiteData ParasiteData.dat
+u 0:100 PrintCountData
 
-u 10000 PrintHostPhenotypeData
-u 10000 PrintParasitePhenotypeData
+u 5000 PrintHostPhenotypeData
+u 5000 PrintParasitePhenotypeData
 
-u 10000 DumpHostGenotypeList
-u 10000 DumpParasiteGenotypeList
+u 5000 DumpHostGenotypeList
+u 5000 DumpParasiteGenotypeList
 
-u 10000 DumpHostTaskGrid
-u 10000 DumpParasiteTaskGrid
+u 5000 DumpHostTaskGrid
+u 5000 DumpParasiteTaskGrid
 
-u 10000 PrintHostTasksData
-u 10000 PrintParasiteTasksData
+u 5000 PrintHostTasksData
+u 5000 PrintParasiteTasksData
 
-u 10000 PrintParasiteData ParasiteData.dat
-u 10000 PrintAverageData       # Save info about the average genotypes
-u 10000 PrintCountData         # Count organisms, genotypes, species, etc.
-u 10000 PrintTimeData          # Track time conversion (generations, etc.)
-u 10000 PrintMigrationData
-u 10000 SavePopulation
+u 5000 PrintParasiteData ParasiteData.dat
+u 5000 PrintAverageData       # Save info about the average genotypes
+u 5000 PrintCountData         # Count organisms, genotypes, species, etc.
+u 5000 PrintTimeData          # Track time conversion (generations, etc.)
+u 5000 PrintMigrationData
+u 5000 SavePopulation
 
-u 10000 Exit
+u 5000 Exit
 
 EOF
 #______________________________________________________________________________
