@@ -1,16 +1,16 @@
 #!/bin/bash
 
 
-export NUM_DEMES="${NUM_DEMES:-50}"
+export NUM_DEMES="${NUM_DEMES:-20}"
 echo "NUM_DEMES ${NUM_DEMES}"
 
 export RANDOM_SEED="${RANDOM_SEED:-1}"
 echo "RANDOM_SEED ${RANDOM_SEED}"
 
-export WORLD_X="${WORLD_X:-20}"
+export WORLD_X="${WORLD_X:-35}"
 echo "WORLD_X ${WORLD_X}"
 
-export WORLD_Y="${WORLD_Y:-1000}"
+export WORLD_Y="${WORLD_Y:-700}"
 echo "WORLD_Y ${WORLD_Y}"
 
 export INJECT_PARASITE_ACTION_PREPEND="${INJECT_PARASITE_ACTION_PREPEND:-}"
