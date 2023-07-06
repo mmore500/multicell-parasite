@@ -25,7 +25,7 @@ CONFIG_AND_RUN="$(
 )"
 
 CONTINUATION_TEMPLATE="$(
-  cat stage=${STAGE}+what=evolve_parasite_with_polypopulation_reseeded_hosts/evolve_parasite_with_polypopulation_reseeded_hosts.slurm.sh.jinja | sed 's/^/  /'
+  cat stage=${STAGE}+what=no_parasite_with_monopopulation_reseeded_hosts/no_parasite_with_monopopulation_reseeded_hosts.slurm.sh.jinja | sed 's/^/  /'
 )"
 
 INSTALL_AVIDA_SNIPPET="$(
@@ -41,25 +41,25 @@ SETUP_PRODUCTION_DEPENDENCIES_SNIPPET="$(
 SBATCH_SCRIPT_DIRECTORY_PATH="$(mktemp -d)"
 echo "SBATCH_SCRIPT_DIRECTORY_PATH ${SBATCH_SCRIPT_DIRECTORY_PATH}"
 
-NUM_REPS=40
+NUM_REPS=5
 echo "NUM_REPS ${NUM_REPS}"
 
 HOST_PROTOTYPE_DIR_GLOB="${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE}/stage=05+what=prepare_host_protopopulations/latest/tasks=*/"
 echo "HOST_PROTOTYPE_DIR_GLOB ${HOST_PROTOTYPE_DIR_GLOB}"
 
-host_prototype_paths="$(for i in {1..40}; do for host_prototype_dir in ${HOST_PROTOTYPE_DIR_GLOB}; do ls -1d "${host_prototype_dir}/"*".org" | shuf --random-source=<(yes "seed${i}" | head -n 100) | awk "NR == $i" | tr '\n' ' '; done; done)"
-echo "host_prototype_paths ${host_prototype_paths}"
-
 # adapted from https://superuser.com/a/284226
 # generated using script/pick_resource_combos.py
 for replicate in $(seq "${NUM_REPS}"); do
 echo "replicate ${replicate}"
+for host_prototype_dir in ${HOST_PROTOTYPE_DIR_GLOB}; do
+  echo "host_prototype_dir ${host_prototype_dir}"
+
   SBATCH_SCRIPT_PATH="${SBATCH_SCRIPT_DIRECTORY_PATH}/$(uuidgen).slurm.sh"
   echo "SBATCH_SCRIPT_PATH ${SBATCH_SCRIPT_PATH}"
-  j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "stage=${STAGE}+what=evolve_parasite_with_polypopulation_reseeded_hosts/evolve_parasite_with_polypopulation_reseeded_hosts.slurm.sh.jinja" << J2_HEREDOC_EOF
-inject_parasite_action_prepend: ''
+  j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "stage=06+what=evolve_parasite_with_monopopulation_reseeded_hosts/no_parasite_with_monopopulation_reseeded_hosts.slurm.sh.jinja" << J2_HEREDOC_EOF
+inject_parasite_action_prepend: '#'
 stage: '${STAGE}'
-what: evolve_parasite_with_polypopulation_reseeded_hosts
+what: no_parasite_with_monopopulation_reseeded_hosts
 attempt: ${ATTEMPT}
 config_and_run: |
 ${CONFIG_AND_RUN}
@@ -68,7 +68,7 @@ ${CONTINUATION_TEMPLATE}
 epoch: 0
 install_avida: |
 ${INSTALL_AVIDA_SNIPPET}
-host_prototype_paths: ${host_prototype_paths}
+host_prototype_paths: $(echo ${host_prototype_dir}/*.org)
 load_population_path: |
   LOAD_POPULATION_PATH="\$(mktemp)"
   cat << _EOF_ > "\${LOAD_POPULATION_PATH}"
@@ -86,7 +86,7 @@ setup_instrumentation: |
 ${SETUP_INSTRUMENTATION_SNIPPET}
 setup_production_dependencies: |
 ${SETUP_PRODUCTION_DEPENDENCIES_SNIPPET}
-tasks_slug: all
+tasks_slug: $(grep -oP 'tasks=[^/]*' <<< "${host_prototype_dir}" | keyname extract tasks)
 tasks_configuration: |
   RESOURCE resECHO:inflow=125:outflow=0.10
   # disable host task rewards to avoid weirdness due to having "fast" and
@@ -120,6 +120,7 @@ tasks_configuration: |
 J2_HEREDOC_EOF
 chmod +x "${SBATCH_SCRIPT_PATH}"
 
+done
 done \
   | tqdm \
     --desc "instantiate slurm scripts" \

@@ -13,6 +13,9 @@ echo "WORLD_X ${WORLD_X}"
 export WORLD_Y="${WORLD_Y:-1000}"
 echo "WORLD_Y ${WORLD_Y}"
 
+export INJECT_PARASITE_ACTION_PREPEND="${INJECT_PARASITE_ACTION_PREPEND:-}"
+echo "INJECT_PARASITE_ACTION_PREPEND ${INJECT_PARASITE_ACTION_PREPEND}"
+
 #==============================================================================
 echo avida.cfg
 #==============================================================================
@@ -254,10 +257,10 @@ $(
   done
 )
 
-u 1000 InjectParasite parasite-smt.org ABB 0 50
-u 2000 InjectParasite parasite-smt.org ABB 100 150
-u 4000 InjectParasite parasite-smt.org ABB 50 100
-u 5000 InjectParasite parasite-smt.org ABB 150 200
+${INJECT_PARASITE_ACTION_PREPEND}u 1000 InjectParasite parasite-smt.org ABB 0 50
+${INJECT_PARASITE_ACTION_PREPEND}u 2000 InjectParasite parasite-smt.org ABB 100 150
+${INJECT_PARASITE_ACTION_PREPEND}u 4000 InjectParasite parasite-smt.org ABB 50 100
+${INJECT_PARASITE_ACTION_PREPEND}u 5000 InjectParasite parasite-smt.org ABB 150 200
 
 u 10000 PrintHostPhenotypeData
 u 10000 PrintParasitePhenotypeData
