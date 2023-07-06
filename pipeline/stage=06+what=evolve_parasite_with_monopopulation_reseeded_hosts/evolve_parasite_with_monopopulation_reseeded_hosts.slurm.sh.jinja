@@ -124,7 +124,7 @@ while :; do
   # symlink BATCH to STEP/latest
   for try in {0..9}; do
     ln -srfT "\${BATCH_PATH}" "\${STEP_PATH}/latest" && break
-    echo "ln -srfT \${BATCH_PATH} \${STEP_PATH}/latest failed (try ${try})"
+    echo "ln -srfT \${BATCH_PATH} \${STEP_PATH}/latest failed (try \${try})"
     echo "removing \${STEP_PATH}/latest"
     rm -rf "\${STEP_PATH}/latest"
     SLEEP_DURATION="\$((RANDOM % 10 + 1))"
