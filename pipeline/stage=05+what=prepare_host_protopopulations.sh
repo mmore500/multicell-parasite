@@ -19,7 +19,7 @@ echo "REVISION ${REVISION}"
 BATCH="date=$(date +%Y-%m-%d)+time=$(date +%H-%M-%S)+revision=${REVISION}+uuid=$(uuidgen)"
 echo "BATCH ${BATCH}"
 
-STAGE_PATH="${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE}/stage=05+what=prepare_host_protopopulations/"
+STAGE_PATH="${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE}/stage=${STAGE}+what=prepare_host_protopopulations/"
 echo "STAGE_PATH ${STAGE_PATH}"
 
 export BATCH_PATH="${STAGE_PATH}/batches/${BATCH}/"

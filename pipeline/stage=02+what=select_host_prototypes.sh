@@ -128,11 +128,11 @@ for attempt_path in glob.glob("${EXTRACTED_HOSTS_PATH}/*"):
   if not any(dropped_task in attempt_path for dropped_task in dropped_tasks):
     copy_file(attempt_path, attempt_path.replace(
       "stage=01+what=extract_host_prototypes",
-      "stage=02+what=select_host_prototypes",
+      "stage=${STAGE}+what=select_host_prototypes",
     ))
 EOF
 
-OUTPUT_PATH="${HOME}/scratch/multicell-parasite/data/runmode=production/stage=02+what=select_host_prototypes/latest/"
+OUTPUT_PATH="${HOME}/scratch/multicell-parasite/data/runmode=production/stage=${STAGE}+what=select_host_prototypes/latest/"
 echo "OUTPUT_PATH ${OUTPUT_PATH}"
 
 OUTPUT_ORG_GLOB="${OUTPUT_PATH}/**/host_prototype.org"

@@ -39,7 +39,7 @@ echo "tasks_slug {{ tasks_slug }}"
 
 {{ install_avida }}
 
-STAGE_PATH="${HOME}/scratch/multicell-parasite/data/runmode={{ runmode }}/stage=06+what=evolve_parasite_with_monopopulation_reseeded_hosts/alph=$(python3 -m alphinity {{ replicate }})+replicate={{ replicate }}+tasks={{ tasks_slug }}/"
+STAGE_PATH="${HOME}/scratch/multicell-parasite/data/runmode={{ runmode }}/stage=${STAGE}+what=evolve_parasite_with_monopopulation_reseeded_hosts/alph=$(python3 -m alphinity {{ replicate }})+replicate={{ replicate }}+tasks={{ tasks_slug }}/"
 echo "STAGE_PATH ${STAGE_PATH}"
 
 export ATTEMPT_PATH="${STAGE_PATH}/attempts/alph=$(python3 -m alphinity {{ attempt }})+attempt={{ attempt }}/"
@@ -137,7 +137,7 @@ while :; do
 
   # setup job info
   mkdir job
-  ln -s "joblog/id=${SLURM_JOB_ID-none}+stage=06+ext.txt" "job/log.txt"
+  ln -s "joblog/id=${SLURM_JOB_ID-none}+stage=${STAGE}+ext.txt" "job/log.txt"
   echo "${SLURM_JOB_ID:-none}" > "job/id.txt"
   cp "${JOBSCRIPT_PATH}" "job/rerun.slurm.sh"
   chmod +x "job/rerun.slurm.sh"

@@ -39,7 +39,7 @@ echo "tasks_slug {{ tasks_slug }}"
 
 {{ install_avida }}
 
-STAGE_PATH="${HOME}/scratch/multicell-parasite/data/runmode={{ runmode }}/stage=00+what=evolve_host_prototypes/tasks={{ tasks_slug }}/"
+STAGE_PATH="${HOME}/scratch/multicell-parasite/data/runmode={{ runmode }}/stage=${STAGE}+what=evolve_host_prototypes/tasks={{ tasks_slug }}/"
 echo "STAGE_PATH ${STAGE_PATH}"
 
 export ATTEMPT_PATH="${STAGE_PATH}/attempts/alph=$(python3 -m alphinity {{ attempt }})+attempt={{ attempt }}/"

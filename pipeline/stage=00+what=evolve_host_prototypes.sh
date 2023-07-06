@@ -28,7 +28,7 @@ CONFIG_AND_RUN="$(
 )"
 
 CONTINUATION_TEMPLATE="$(
-  cat stage=00+what=evolve_host_prototypes/evolve_host_prototypes.slurm.sh.jinja | sed 's/^/  /'
+  cat stage=${STAGE}+what=evolve_host_prototypes/evolve_host_prototypes.slurm.sh.jinja | sed 's/^/  /'
 )"
 
 INSTALL_AVIDA_SNIPPET="$(
@@ -49,11 +49,11 @@ echo "NUM_JOBS ${NUM_JOBS}"
 
 # adapted from https://superuser.com/a/284226
 # generated using script/pick_resource_combos.py
-for TASKS in stage=00+what=evolve_host_prototypes/tasks/*; do
+for TASKS in stage=${STAGE}+what=evolve_host_prototypes/tasks/*; do
   echo "tasks_slug $(basename ${TASKS})"
   SBATCH_SCRIPT_PATH="${SBATCH_SCRIPT_DIRECTORY_PATH}/$(uuidgen).slurm.sh"
   echo "SBATCH_SCRIPT_PATH ${SBATCH_SCRIPT_PATH}"
-  j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "stage=00+what=evolve_host_prototypes/evolve_host_prototypes.slurm.sh.jinja" << J2_HEREDOC_EOF
+  j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "stage=${STAGE}+what=evolve_host_prototypes/evolve_host_prototypes.slurm.sh.jinja" << J2_HEREDOC_EOF
 attempt: ${ATTEMPT}
 batch: ${BATCH}
 config_and_run: |
