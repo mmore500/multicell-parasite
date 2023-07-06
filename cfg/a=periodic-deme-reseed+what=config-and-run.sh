@@ -252,7 +252,7 @@ $(
     ancestral_host_org_path="$(echo ${ANCESTRAL_HOST_ORG_PATHS} | cut -d " " -f "$((host_org_idx + 1))")"
     reseed_period_offset="$(( deme ? DEME_RESEED_PERIOD * deme / NUM_DEMES : DEME_RESEED_PERIOD))"
     target_cell_idx="$(( (deme ) * WORLD_SIZE / NUM_DEMES))"
-    echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} KillDemePercent 1.0 $((deme + NUM_DEMES))"
+    echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} KillDemePercent 1.0 $((deme))"
     echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} Inject ${ancestral_host_org_path} ${target_cell_idx}"
   done
 )
