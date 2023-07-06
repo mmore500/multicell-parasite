@@ -239,25 +239,15 @@ i SetFracDemeTreatable 1.0
 i LoadPopulation host-parasite-smt.spop
 
 i KillDemePercent 1.0 0
-i Inject host-smt.org 0
-i Inject ${ANCESTRAL_HOST_ORG_PATHS%% *} $((WORLD_SIZE / 2))
+i Inject ${ANCESTRAL_HOST_ORG_PATHS%% *} 0
 
 $(
-  for ((deme=0; deme<${HALF_NUM_DEMES}; deme++)); do
-    reseed_period_offset="$(( deme ? DEME_RESEED_PERIOD * deme / HALF_NUM_DEMES : DEME_RESEED_PERIOD))"
-    target_cell_idx="$(( deme * WORLD_SIZE / NUM_DEMES ))"
-    echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} KillDemePercent 1.0 ${deme}"
-    echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} Inject host-smt.org ${target_cell_idx}"
-  done
-)
-
-$(
-  for ((deme=0; deme<${HALF_NUM_DEMES}; deme++)); do
+  for ((deme=0; deme<${NUM_DEMES}; deme++)); do
     host_org_idx="$((deme % NUM_ANCESTRAL_HOST_ORG_PATHS))"
     ancestral_host_org_path="$(echo ${ANCESTRAL_HOST_ORG_PATHS} | cut -d " " -f "$((host_org_idx + 1))")"
-    reseed_period_offset="$(( deme ? DEME_RESEED_PERIOD * deme / HALF_NUM_DEMES : DEME_RESEED_PERIOD))"
-    target_cell_idx="$(( (deme + HALF_NUM_DEMES) * WORLD_SIZE / NUM_DEMES))"
-    echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} KillDemePercent 1.0 $((deme + HALF_NUM_DEMES))"
+    reseed_period_offset="$(( deme ? DEME_RESEED_PERIOD * deme / NUM_DEMES : DEME_RESEED_PERIOD))"
+    target_cell_idx="$(( (deme ) * WORLD_SIZE / NUM_DEMES))"
+    echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} KillDemePercent 1.0 $((deme + NUM_DEMES))"
     echo "u ${reseed_period_offset}:${DEME_RESEED_PERIOD} Inject ${ancestral_host_org_path} ${target_cell_idx}"
   done
 )
@@ -718,6 +708,7 @@ num_demes = ${NUM_DEMES}
 migration_mat = np.ones((num_demes, num_demes), dtype=int)
 assert num_demes % 2 == 0
 
+# disabled resevoir population logic
 # i.e.,
 # to
 # r  r  t  t
@@ -725,9 +716,8 @@ assert num_demes % 2 == 0
 # 1, 1, 1, 1  # from resevoir
 # 0, 0, 1, 1  # from target population
 # 0, 0, 1, 1  # from target population
-
-migration_mat[num_demes//2:,:num_demes//2] = 0
-assert migration_mat.sum().sum() == 3 * num_demes * num_demes // 4
+# migration_mat[num_demes//2:,:num_demes//2] = 0
+# assert migration_mat.sum().sum() == 3 * num_demes * num_demes // 4
 
 np.savetxt('migration.mat', migration_mat, delimiter=",")
 EOF
