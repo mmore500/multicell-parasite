@@ -231,8 +231,10 @@ echo "epoch: ${EPOCH_COUNTER}"
 echo load_population_path: LOAD_POPULATION_PATH="${LOAD_POPULATION_PATH}"
 echo load_population_provlog_path: LOAD_POPULATION_PROVLOG_PATH="${LOAD_POPULATION_PROVLOG_PATH}"
 cat << 'J2_HEREDOC_EOF_{{ "instantiated" }}'
-inject_parasite_action_prepend: '{{ inject_parasite_action_prepend }}'
-stage: '{{ stage }}'
+inject_parasite_action_prepend: |-
+{{ inject_parasite_action_prepend | indent(2, first=True) }}
+stage: |-
+{{ stage | indent(2, first=True) }}
 what: {{ what }}
 attempt: {{ attempt }}
 config_and_run: |

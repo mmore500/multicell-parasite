@@ -57,8 +57,10 @@ echo "replicate ${replicate}"
   SBATCH_SCRIPT_PATH="${SBATCH_SCRIPT_DIRECTORY_PATH}/$(uuidgen).slurm.sh"
   echo "SBATCH_SCRIPT_PATH ${SBATCH_SCRIPT_PATH}"
   j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "stage=07+what=evolve_parasite_with_polypopulation_reseeded_hosts/evolve_parasite_with_polypopulation_reseeded_hosts.slurm.sh.jinja" << J2_HEREDOC_EOF
-inject_parasite_action_prepend: INJECT_PARASITE_ACTION_PREPEND='#'
-stage: '${STAGE}'
+inject_parasite_action_prepend: |-
+  INJECT_PARASITE_ACTION_PREPEND="#"
+stage: |-
+  ${STAGE}
 what: no_parasite_with_polypopulation_reseeded_hosts
 attempt: ${ATTEMPT}
 config_and_run: |
