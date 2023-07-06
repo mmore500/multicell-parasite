@@ -138,6 +138,8 @@ STERILIZE_UNSTABLE 1
 # PARASITE CONFIGURATION
 #------------------------------------------------------------------------------
 
+LOG_PARASITE_INJECTIONS 1
+
 # Don't reset host thread upon infection
 # What should happen to a parasite when it gives birth?
 # 0 = Leave the parasite thread state untouched.
