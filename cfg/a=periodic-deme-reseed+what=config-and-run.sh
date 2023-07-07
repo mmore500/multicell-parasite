@@ -613,8 +613,23 @@ Nop-B
 EOF
 #______________________________________________________________________________
 
+
 #==============================================================================
-# parasite-smt.org
+echo host-smt.org.provlog.yaml
+#==============================================================================
+cat << 'EOF' > "host-smt.org.provlog.yaml"
+-
+  a: host-smt.orf.provlog.yaml
+  artifact: host-smt.org
+  script: multicell-parasite/cfg/a=periodic-deme-reseed+what=config-and-run.sh
+  slurm_job_id: none
+  pwd: /home/mmore500/2023-05-10/multicell-parasite/work
+EOF
+#______________________________________________________________________________
+
+
+#==============================================================================
+echo parasite-smt.org
 #==============================================================================
 cat << 'EOF' > "parasite-smt.org"
 Search       #  1:  Find organism end.
@@ -699,6 +714,21 @@ Nop-A        # 17:
 Nop-B
 EOF
 #______________________________________________________________________________
+
+
+#==============================================================================
+echo parasite-smt.org.provlog.yaml
+#==============================================================================
+cat << 'EOF' > "host-smt.org.provlog.yaml"
+-
+  a: parasite-smt.orf.provlog.yaml
+  artifact: parasite-smt.org
+  script: multicell-parasite/cfg/a=periodic-deme-reseed+what=config-and-run.sh
+  slurm_job_id: none
+  pwd: /home/mmore500/2023-05-10/multicell-parasite/work
+EOF
+#______________________________________________________________________________
+
 
 #==============================================================================
 echo migration.mat
