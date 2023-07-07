@@ -63,10 +63,10 @@ from tqdm import tqdm
 
 
 provlog_paths = [*glob.glob(
-    "${DATA_PATH}/stage=10+what=ecological_parasite_with_monopopulation_reseeded/**/provlog.yaml",
+    "${DATA_PATH}/stage=10+what=ecological_parasite_with_monopopulation_reseeded+*/**/provlog.yaml",
     recursive=True,
 )] + [*glob.glob(
-    "${DATA_PATH}/stage=11+what=ecological_parasite_with_polypopulation_reseeded/**/proglog.yaml",
+    "${DATA_PATH}/stage=11+what=ecological_parasite_with_polypopulation_reseeded+*/**/proglog.yaml",
     recursive=True,
 )]
 
@@ -215,10 +215,10 @@ def process_one_path(path: str) -> pd.DataFrame:
     return pd.DataFrame.from_records(records)
 
 grid_dat_paths = [*glob.glob(
-    "${DATA_PATH}/stage=10+what=ecological_parasite_with_monopopulation_reseeded_hosts/**/grid_task*.dat",
+    "${DATA_PATH}/stage=10+what=ecological_parasite_with_monopopulation_reseeded_hosts+*/**/grid_task*.dat",
     recursive=True,
 )] + [*glob.glob(
-    "${DATA_PATH}/stage=11+what=ecological_parasite_with_polypopulation_reseeded_hosts/**/grid_task*.dat",
+    "${DATA_PATH}/stage=11+what=ecological_parasite_with_polypopulation_reseeded_hosts+*/**/grid_task*.dat",
     recursive=True,
 )]
 
