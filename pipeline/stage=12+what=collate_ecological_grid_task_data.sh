@@ -236,7 +236,7 @@ master_df = pd.concat(
     dataframes
 ).reset_index(drop=True)
 print("master dataframe concatenated")
-master_df.to_h(
+master_df.to_csv(
   "${BATCH_PATH}/collated_grid_task-bycell.csv",
 )
 print("${BATCH_PATH}/collated_grid_task-bycell.csv saved")
