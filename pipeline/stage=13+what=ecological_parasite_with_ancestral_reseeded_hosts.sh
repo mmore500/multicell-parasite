@@ -91,7 +91,7 @@ setup_instrumentation: |
 ${SETUP_INSTRUMENTATION_SNIPPET}
 setup_production_dependencies: |
 ${SETUP_PRODUCTION_DEPENDENCIES_SNIPPET}
-tasks_slug: $(grep -oP 'tasks=[^/]*' <<< "${host_prototype_dir}" | keyname extract tasks)
+tasks_slug: ancestral
 tasks_configuration: |
   RESOURCE resECHO:inflow=125:outflow=0.10
   # disable host task rewards to avoid weirdness due to having "fast" and
