@@ -57,11 +57,17 @@ echo "replicate ${replicate}"
   j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "stage=06+what=evolve_parasite_with_monopopulation_reseeded_hosts/evolve_parasite_with_monopopulation_reseeded_hosts.slurm.sh.jinja" << J2_HEREDOC_EOF
 inject_parasite_action_prepend: |-
   INJECT_PARASITE_ACTION_PREPEND=""
+  export INJECT_PARASITE_ACTION_PREPEND
   DEME_RESEED_PERIOD="${DEME_RESEED_PERIOD}"
+  export DEME_RESEED_PERIOD
   DIV_MUT_PROB=0
+  export DIV_MUT_PROB
   INJECT_MUT_PROB=0
+  export INJECT_MUT_PROB
   INJECT_INS_PROB=0
+  export INJECT_INS_PROB
   INJECT_DEL_PROB=0
+  export INJECT_DEL_PROB
 stage: |-
   ${STAGE}
 what: ecological_parasite_with_ancestral_reseeded_hosts+DEME_RESEED_PERIOD=${DEME_RESEED_PERIOD}

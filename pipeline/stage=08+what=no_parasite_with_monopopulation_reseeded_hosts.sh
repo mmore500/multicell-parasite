@@ -59,6 +59,7 @@ for host_prototype_dir in ${HOST_PROTOTYPE_DIR_GLOB}; do
   j2 --format=yaml -o "${SBATCH_SCRIPT_PATH}" "stage=06+what=evolve_parasite_with_monopopulation_reseeded_hosts/evolve_parasite_with_monopopulation_reseeded_hosts.slurm.sh.jinja" << J2_HEREDOC_EOF
 inject_parasite_action_prepend: |-
   INJECT_PARASITE_ACTION_PREPEND="#"
+  export INJECT_PARASITE_ACTION_PREPEND
 stage: |-
   ${STAGE}
 what: no_parasite_with_monopopulation_reseeded_hosts
