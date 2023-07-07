@@ -151,6 +151,17 @@ while :; do
   echo "LOAD_POPULATION_PROVLOG_PATH \${LOAD_POPULATION_PROVLOG_PATH}"
   echo "INJECT_PARASITE_ACTION_PREPEND \${INJECT_PARASITE_ACTION_PREPEND}"
 
+  cp "\${LOAD_POPULATION_PATH}" host-parasite-smt.spop
+
+  cat << EOF >> "environment.cfg"
+{{ tasks_configuration }}
+EOF
+
+  export RANDOM_SEED="\$(cksum <<< "{{ replicate }} \${EPOCH_COUNTER}" | cut -f 1 -d ' ')"
+  echo "RANDOM_SEED \${RANDOM_SEED}"
+
+  {{ config_and_run | replace("$", "\$") }}
+
   # create provlog
   cp "\${LOAD_POPULATION_PROVLOG_PATH}" "provlog.yaml"
   cat "${ANCESTRAL_HOST_ORG_PATHS%% *}.provlog.yaml" >> "provlog.yaml"
@@ -185,17 +196,6 @@ EOF
   # uses inode trick to read/write from same file safely
   # https://serverfault.com/a/557566
   { rm -f provlog.yaml && sed '/.-/ s/\$/ /' | awk 'BEGIN{RS="-\n"; ORS=RS} !a[\$0]++' - | sed 's/[ \t]*\$//' | head -c -2 > provlog.yaml; } < provlog.yaml
-
-  cp "\${LOAD_POPULATION_PATH}" host-parasite-smt.spop
-
-  cat << EOF >> "environment.cfg"
-{{ tasks_configuration }}
-EOF
-
-  export RANDOM_SEED="\$(cksum <<< "{{ replicate }} \${EPOCH_COUNTER}" | cut -f 1 -d ' ')"
-  echo "RANDOM_SEED \${RANDOM_SEED}"
-
-  {{ config_and_run | replace("$", "\$") }}
 
   LOAD_POPULATION_PATH="\$(echo "\${PWD}/data/"*.spop | xargs readlink -f)"
   LOAD_POPULATION_PROVLOG_PATH="\$(echo "\${PWD}/provlog.yaml" | xargs readlink -f)"
