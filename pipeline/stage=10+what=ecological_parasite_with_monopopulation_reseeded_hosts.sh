@@ -65,8 +65,7 @@ inject_parasite_action_prepend: |-
   export INJECT_PARASITE_ACTION_PREPEND
   DEME_RESEED_PERIOD="${DEME_RESEED_PERIOD}"
   export DEME_RESEED_PERIOD
-  DIV_MUT_PROB=0
-  export DIV_MUT_PROB
+  # host mutations ARE allowed
   INJECT_MUT_PROB=0
   export INJECT_MUT_PROB
   INJECT_INS_PROB=0
