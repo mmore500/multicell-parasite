@@ -161,7 +161,7 @@ while :; do
 {{ tasks_configuration }}
 EOF
 
-  export RANDOM_SEED="\$(cksum <<< "{{ tasks_slug }} \${EPOCH_COUNTER}" | cut -f 1 -d ' ')"
+  export RANDOM_SEED="\$(cksum <<< "{{ tasks_slug }} \${EPOCH_COUNTER} {{ replicate }}" | cut -f 1 -d ' ')"
   echo "RANDOM_SEED \${RANDOM_SEED}"
 
   {{ config_and_run | replace("$", "\$") }}
