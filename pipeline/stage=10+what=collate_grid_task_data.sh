@@ -100,7 +100,7 @@ cat << EOF >> "${BATCH_PATH}/provlog.yaml"
 -
   a: $(basename "${BATCH_PATH}.provlog.yaml")
   batch: ${BATCH}
-  stage: 8
+  stage: ${STAGE}
   date: $(date --iso-8601=seconds)
   hostname: $(hostname)
   path: $(realpath ${BATCH_PATH})
