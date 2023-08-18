@@ -619,7 +619,7 @@ echo host-smt.org.provlog.yaml
 #==============================================================================
 cat << 'EOF' > "host-smt.org.provlog.yaml"
 -
-  a: host-smt.orf.provlog.yaml
+  a: host-smt.org.provlog.yaml
   artifact: host-smt.org
   script: multicell-parasite/cfg/a=periodic-deme-reseed+what=config-and-run.sh
   slurm_job_id: none
@@ -721,7 +721,7 @@ echo parasite-smt.org.provlog.yaml
 #==============================================================================
 cat << 'EOF' > "host-smt.org.provlog.yaml"
 -
-  a: parasite-smt.orf.provlog.yaml
+  a: parasite-smt.org.provlog.yaml
   artifact: parasite-smt.org
   script: multicell-parasite/cfg/a=periodic-deme-reseed+what=config-and-run.sh
   slurm_job_id: none
