@@ -49,7 +49,7 @@ echo "PWD ${PWD}"
 DATA_PATH="${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE}/"
 echo "DATA_PATH ${DATA_PATH}"
 
-MAX_EPOCH=100
+MAX_EPOCH=200
 echo "MAX_EPOCH ${MAX_EPOCH}"
 
 # provlog
