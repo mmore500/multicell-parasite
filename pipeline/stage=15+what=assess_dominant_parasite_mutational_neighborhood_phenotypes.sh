@@ -238,7 +238,7 @@ def try_process_one_path(path: str) -> pd.DataFrame:
     for attempt in range(8):
         try:
             return process_one_path(path)
-        except pd.errors.ParserError as e:
+        except (pd.errors.ParserError, ValueError) as e:
             error = e
             continue
 
