@@ -221,11 +221,11 @@ def process_one_path(path: str) -> pd.DataFrame:
         hostify_sequences=True,
     )
     para_summary_df = summarize_mutational_neighborhood_phenotypes(
-      para_phenotypes_df,
+        para_phenotypes_df,
     )
 
     for key, value in meta.items():
-      para_summary_df[key] = value
+        para_summary_df[key] = value
 
     for key, value in dominant_para_taxon.items():
         para_summary_df[f"Reference Taxon {key}"] = value
