@@ -196,10 +196,11 @@ def process_one_path(path: str) -> pd.DataFrame:
     manipulator = GenomeManipulator(make_named_instset_path("transsmt"))
 
     # analyze parasites
-    dominant_para_seq = extract_dominant_taxon(
+    dominant_para_taxon = extract_dominant_taxon(
         pop_df,
         "parasite",
-    )["Genome Sequence"]
+    )
+    dominant_para_seq = dominant_para_taxon["Genome Sequence"]
     onestep_para_neighborhood = get_onestep_pointmut_neighborhood(
         dominant_para_seq,
         manipulator,
@@ -225,6 +226,9 @@ def process_one_path(path: str) -> pd.DataFrame:
 
     for key, value in meta.items():
       para_summary_df[key] = value
+
+    for key, value in dominant_para_taxon.items():
+        para_summary_df[f"Reference Taxon {key}"] = value
 
     return para_summary_df
 
