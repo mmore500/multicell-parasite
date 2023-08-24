@@ -49,8 +49,8 @@ echo "PWD ${PWD}"
 DATA_PATH="${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE}/"
 echo "DATA_PATH ${DATA_PATH}"
 
-MAX_EPOCH=200
-echo "MAX_EPOCH ${MAX_EPOCH}"
+TARGET_EPOCH=100
+echo "TARGET_EPOCH ${TARGET_EPOCH}"
 
 # provlog
 python3 - << EOF
@@ -75,7 +75,7 @@ file_contents = []
 
 def read_file(path):
     attrs = kn.unpack(path.replace("/", "+"))
-    if int(attrs["epoch"]) < ${MAX_EPOCH}:
+    if int(attrs["epoch"]) == ${TARGET_EPOCH}:
         with open(path, 'r') as file:
             return file.read()
     else:
@@ -171,7 +171,7 @@ def process_one_path(path: str) -> pd.DataFrame:
     }
 
     # skip data to keep tractable
-    if int(meta["epoch"]) >= ${MAX_EPOCH}:
+    if int(meta["epoch"]) != ${TARGET_EPOCH}:
         return pd.DataFrame()
 
     meta["treatment"], = [
