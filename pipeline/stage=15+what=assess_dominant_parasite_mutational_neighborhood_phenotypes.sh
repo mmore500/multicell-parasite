@@ -218,7 +218,7 @@ def process_one_path(path: str) -> pd.DataFrame:
         para_neighborhood,
         get_named_environment_content("top25"),
         get_named_instset_content("transsmt"),
-        hostify_sequences=True,
+        assess_parasites="simulate",
     )
     para_summary_df = summarize_mutational_neighborhood_phenotypes(
         para_phenotypes_df,
