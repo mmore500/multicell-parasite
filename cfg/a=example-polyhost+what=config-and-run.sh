@@ -45,9 +45,9 @@ cat << EOF > "avida.cfg"
 # Let's output a bit about the threads and parasites to stdout
 VERBOSITY 3
 # We use a bigger world than default
-WORLD_X 35
-WORLD_Y 700
-NUM_DEMES 20
+WORLD_X ${WORLD_X}
+WORLD_Y ${WORLD_Y}
+NUM_DEMES ${NUM_DEMES}
 RANDOM_SEED ${RANDOM_SEED}
 
 
