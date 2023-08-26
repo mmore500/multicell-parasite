@@ -11,10 +11,12 @@ echo "VENV_CACHE_PATH ${VENV_CACHE_PATH}"
 
 GITDIR="$(git rev-parse --show-toplevel)"  # absolute path
 echo "GITDIR ${GITDIR}"
+git -C "${GITDIR}" diff --quiet HEAD -- "${GITDIR}/requirements.txt" || {
+  echo "dirty ${GITDIR}/requirements.txt"; exit 1
+}
 
-if \
-  git -C "${GITDIR}" diff --quiet HEAD -- "${GITDIR}/requirements.txt" \
-  && test -d "${VENV_CACHE_PATH}"
+
+if test -d "${VENV_CACHE_PATH}"
 then
 
 
@@ -24,7 +26,6 @@ VENV_PATH="${VENV_CACHE_PATH}"
 else
 
 echo "no eligible venv cache available at ${VENV_CACHE_PATH}"
-echo "(maybe requirements.txt is dirty)"
 VENV_PATH="$(mktemp -d)"
 echo "VENV_PATH ${VENV_PATH}"
 
