@@ -6,6 +6,9 @@
 export AVIDA="${AVIDA:-./avida}"
 echo "AVIDA ${AVIDA}"
 
+export EPOCH="${EPOCH:-0}"
+echo "EPOCH ${EPOCH}"
+
 export WORLD_X="${WORLD_X:-35}"
 echo "WORLD_X ${WORLD_X}"
 
@@ -30,7 +33,7 @@ echo "NUM_DEME_PARTITIONS ${NUM_DEME_PARTITIONS}"
 export DEMES_PARTITION_INTERVAL="$(( NUM_DEMES / NUM_DEME_PARTITIONS ))"
 echo "DEMES_PARTITION_INTERVAL ${DEMES_PARTITION_INTERVAL}"
 
-export NUM_UPDATES_INTRO_SMEAR="${NUM_UPDATES_INTRO_SMEAR:-500}"
+export NUM_UPDATES_INTRO_SMEAR="${NUM_UPDATES_INTRO_SMEAR:-1000}"
 echo "NUM_UPDATES_INTRO_SMEAR ${NUM_UPDATES_INTRO_SMEAR}"
 #______________________________________________________________________________
 
@@ -56,6 +59,9 @@ RANDOM_SEED ${RANDOM_SEED}
 # 0 = Maintain old consistency
 # 1 = New method using genotypes
 DEMES_SEED_METHOD 1
+
+# Number of organisms in a deme to trigger its replication (0 = OFF).
+DEMES_REPLICATE_ORGS ${NUM_CELLS_PER_DEME}
 
 # Deme divide method.
 # Only works with DEMES_SEED_METHOD 1
@@ -326,48 +332,45 @@ $(
   for ((deme=0; deme<${NUM_DEMES}; deme++)); do
     host_org_idx="$((deme / DEMES_PARTITION_INTERVAL))"
     host_org_seq="$(echo ${HOST_SEQS} | cut -d " " -f "$((host_org_idx + 1))")"
-    reseed_period_offset="$(( (NUM_UPDATES_INTRO_SMEAR * deme) / NUM_DEMES))"
+    smear_delay="$(( (NUM_UPDATES_INTRO_SMEAR * deme) / NUM_DEMES))"
     target_cell_idx="$((deme * NUM_CELLS_PER_DEME))"
-    echo "u ${reseed_period_offset} InjectSequence ${host_org_seq} ${target_cell_idx}"
+    echo "u ${smear_delay} InjectSequence ${host_org_seq} ${target_cell_idx}"
   done
 )
 
-
 # Let the hosts grow a bit, then inject parasites
-u 1000 InjectParasite parasite-smt.org ABB 0 100
-u 1000 InjectParasite parasite-smt.org ABB 1600 1700
-u 1000 InjectParasite parasite-smt.org ABB 3200 3300
-u 1000 InjectParasite parasite-smt.org ABB 3200 3300
-u 1000 InjectParasite parasite-smt.org ABB 4800 4900
-u 1000 InjectParasite parasite-smt.org ABB 6400 6500
-u 1000 InjectParasite parasite-smt.org ABB 8000 8100
-u 1000 InjectParasite parasite-smt.org ABB 9600 9700
-u 1000 InjectParasite parasite-smt.org ABB 11200 11300
-u 1000 InjectParasite parasite-smt.org ABB 12800 12900
-u 1000 InjectParasite parasite-smt.org ABB 14400 14500
+$(
+  if [ "${EPOCH}" -eq 0 ]; then
+    for pos in $(seq 0 100 "$(( WORLD_SIZE - 1 ))"); do
+      smear_delay="$(( (NUM_UPDATES_INTRO_SMEAR * pos) / WORLD_SIZE  ))"
+      echo "u $(( 2000 + smear_delay )) InjectParasite parasite-smt.org ABB ${pos}"
+    done
+  fi
+)
 
-u 20000 Exit
+u 0:100 PrintParasiteData ParasiteData.dat
+u 0:100 PrintCountData
 
-u 0:500:end PrintHostPhenotypeData
-u 0:500:end PrintParasitePhenotypeData
+u 5000 PrintHostPhenotypeData
+u 5000 PrintParasitePhenotypeData
 
-u 10000:10000:end DumpHostGenotypeList
-u 10000:10000:end DumpParasiteGenotypeList
+u 5000 DumpHostGenotypeList
+u 5000 DumpParasiteGenotypeList
 
+u 5000 DumpHostTaskGrid
+u 5000 DumpParasiteTaskGrid
 
-u 0:200:end DumpHostTaskGrid
-u 0:200:end DumpParasiteTaskGrid
+u 5000 PrintHostTasksData
+u 5000 PrintParasiteTasksData
 
-u 0:200:end PrintHostTasksData
-u 0:200:end PrintParasiteTasksData
+u 5000 PrintParasiteData ParasiteData.dat
+u 5000 PrintAverageData       # Save info about the average genotypes
+u 5000 PrintCountData         # Count organisms, genotypes, species, etc.
+u 5000 PrintTimeData          # Track time conversion (generations, etc.)
+u 5000 PrintMigrationData
+u 5000 SavePopulation
 
-
-u 0:100:end PrintParasiteData ParasiteData.dat
-
-# Save info about they average genotypes
-u 0:100:end PrintAverageData
-u 0:100:end PrintCountData         # Count organisms, genotypes, species, etc.
-u 0:100:end PrintTimeData          # Track time conversion (generations, etc.)
+u 5000 Exit
 EOF
 #______________________________________________________________________________
 
