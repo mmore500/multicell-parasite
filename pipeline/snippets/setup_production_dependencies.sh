@@ -6,6 +6,16 @@ echo "REVISION ${REVISION}"
 module purge || :
 module load GCCcore/11.3.0 git/2.36.0-nodocs Python/3.10.4 binutils/2.39 || :
 
+VENV_CACHE_PATH="/tmp/venv-${REVISION}"
+
+if [ -d "${VENV_CACHE_PATH}" ]; then
+
+echo "venv cache available at ${VENV_CACHE_PATH}"
+VENV_PATH="${VENV_CACHE_PATH}"
+
+else
+
+echo "no venv cache available at ${VENV_CACHE_PATH}"
 VENV_PATH="$(mktemp -d)"
 echo "VENV_PATH ${VENV_PATH}"
 
@@ -24,3 +34,8 @@ for try in {0..9}; do
   echo "sleeping ${SLEEP_DURATION} then retrying"
   sleep "${SLEEP_DURATION}"
 done
+
+echo "setting venv cache at ${VENV_CACHE_PATH}"
+ln -s "${VENV_PATH}" "${VENV_CACHE_PATH}" || :
+
+fi
