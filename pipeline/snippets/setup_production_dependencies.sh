@@ -7,15 +7,24 @@ module purge || :
 module load GCCcore/11.3.0 git/2.36.0-nodocs Python/3.10.4 binutils/2.39 || :
 
 VENV_CACHE_PATH="/tmp/venv-${REVISION}"
+echo "VENV_CACHE_PATH ${VENV_CACHE_PATH}"
 
-if [ -d "${VENV_CACHE_PATH}" ]; then
+GITDIR="$(git rev-parse --show-toplevel)"  # absolute path
+echo "GITDIR ${GITDIR}"
+
+if \
+  git -C "${GITDIR}" diff --quiet HEAD -- "${GITDIR}/requirements.txt" \
+  && test -d "${VENV_CACHE_PATH}"
+then
+
 
 echo "venv cache available at ${VENV_CACHE_PATH}"
 VENV_PATH="${VENV_CACHE_PATH}"
 
 else
 
-echo "no venv cache available at ${VENV_CACHE_PATH}"
+echo "no eligible venv cache available at ${VENV_CACHE_PATH}"
+echo "(maybe requirements.txt is dirty)"
 VENV_PATH="$(mktemp -d)"
 echo "VENV_PATH ${VENV_PATH}"
 
