@@ -97,7 +97,7 @@ case "${TREATMENT}" in
     monopoly=1
     host_seq_idx="$(( REPLICATE % NUM_HOST_SEQS ))"
     host_seq_arr=($HOST_SEQS)
-    export HOST_SEQS=${host_seq_arr["${host_seq_idx}"]}
+    export HOST_SEQS="${host_seq_arr["${host_seq_idx}"]}"
     export NUM_HOST_SEQS=1
     export NUM_DEME_PARTITIONS="${NUM_DEME_PARTITIONS:-1}"
   ;;&
@@ -151,7 +151,7 @@ RANDOM_SEED ${RANDOM_SEED}
 # Deme seeding method.
 # 0 = Maintain old consistency
 # 1 = New method using genotypes
-DEMES_SEED_METHOD 0
+DEMES_SEED_METHOD 0  # this doesn't matter for DEMES_USE_GERMLINE 1
 
 # Number of organisms in a deme to trigger its replication (0 = OFF).
 DEMES_REPLICATE_ORGS ${NUM_CELLS_PER_DEME}
@@ -186,7 +186,7 @@ DEMES_RESET_RESOURCES 2
 
 # Number of offspring produced by a deme to trigger its replication.
 # 0 = OFF
-DEMES_REPLICATE_BIRTHS 100000000
+DEMES_REPLICATE_BIRTHS 0
 
 # Max number of births that can occur within a deme;
 # used with birth-count replication
