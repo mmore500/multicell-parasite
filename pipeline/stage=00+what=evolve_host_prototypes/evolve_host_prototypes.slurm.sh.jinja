@@ -3,7 +3,7 @@
 #SBATCH --time={%if 'production' == runmode%}4:00:00{%else%}1:00:00{%endif%}
 #SBATCH --job-name evolve_host_prototypes
 #SBATCH --account=devolab
-#SBATCH --output="/mnt/home/%u/slurm_job_log/a=evolve_host_prototypes+slurm_job_id=%j+ext.txt"
+#SBATCH --output="/mnt/home/%u/joblog/id=%j+stage=0+ext.txt"
 #SBATCH --mem=4G
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
