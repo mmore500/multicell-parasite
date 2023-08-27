@@ -111,11 +111,11 @@ case "${TREATMENT}" in
 esac
 
 # make sure both categories set
-if ${evoeco:-false}; then
+if ! ((${evoeco:-0})); then
   echo "bad treatment ${TREATMENT}, missing evoeco"
   exit 1
 fi
-if ${monopoly:-false}; then
+if ! ((${monopoly:-0})); then
   echo "bad treatment ${TREATMENT}, missing monopoly"
   exti 1
 fi
