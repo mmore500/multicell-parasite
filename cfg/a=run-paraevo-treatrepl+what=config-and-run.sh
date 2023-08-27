@@ -572,4 +572,5 @@ Nop-B
 EOF
 #______________________________________________________________________________
 
+"${AVIDA}" -c avida.cfg -r  # review config settings
 "${AVIDA}" -c avida.cfg
