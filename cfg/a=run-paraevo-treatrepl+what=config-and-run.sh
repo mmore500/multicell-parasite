@@ -251,10 +251,15 @@ AGE_LIMIT 30
 # Substitution rate (per copy)
 # We assign mtuation rates independently for hosts/parasites
 COPY_MUT_PROB 0
-CONFIG_ADD_VAR(COPY_INS_PROB, double, 0.0, "Insertion rate (per copy)");
-CONFIG_ADD_VAR(COPY_DEL_PROB, double, 0.0, "Deletion rate (per copy)");
-CONFIG_ADD_VAR(COPY_UNIFORM_PROB, double, 0.0, "Uniform mutation probability (per copy)\n- Randomly apply insertion, deletion or substition mutation");
-CONFIG_ADD_VAR(COPY_SLIP_PROB, double, 0.0, "Slip rate (per copy)");
+# Insertion rate (per copy)
+COPY_INS_PROB 0
+# Deletion rate (per copy)
+COPY_DEL_PROB 0
+# Uniform mutation probability (per copy)
+# Randomly apply insertion, deletion or substition mutation
+COPY_UNIFORM_PROB 0
+# Slip rate (per copy)
+COPY_SLIP_PROB 0
 
 # Substitution rate (per site, applied on divide)
 DIV_MUT_PROB 0.001000
