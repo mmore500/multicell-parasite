@@ -43,7 +43,7 @@ echo "TREATMENT ${TREATMENT}"
 
 {{ install_avida }}
 
-STAGE_PATH="${HOME}/scratch/multicell-parasite/data/runmode={{ runmode }}/stage=${STAGE}+what=run_paraevo_treatrepl/"
+STAGE_PATH="${HOME}/scratch/multicell-parasite/data/runmode={{ runmode }}/stage=${STAGE}+what=run_paraevo_treatrepl/treatment=${TREATMENT}/alph=$(python3 -m alphinity ${REPLICATE})+replicate=${REPLICATE}/"
 echo "STAGE_PATH ${STAGE_PATH}"
 
 {{ load_population_path }}
