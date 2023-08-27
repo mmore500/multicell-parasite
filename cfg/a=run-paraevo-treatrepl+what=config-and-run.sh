@@ -173,7 +173,7 @@ DEMES_PARTITION_INTERVAL ${DEMES_PARTITION_INTERVAL}
 # 1: Traditional germ lines
 # 2: Genotype tracking
 # 3: Organism flagging germline
-DEMES_USE_GERMLINE 2
+DEMES_USE_GERMLINE 1
 
 # Give empty demes preference as targets of deme replication?
 DEMES_PREFER_EMPTY 1
