@@ -209,6 +209,10 @@ DEMES_PARASITE_MIGRATION_RATE 0.002
 # Probability of an offspring being born in a different deme.
 DEMES_MIGRATION_RATE 0.0
 
+# Log deme replications?
+LOG_DEMES_REPLICATE 1
+# Log injection of organisms.  0/1 (off/on)
+LOG_INJECT 1
 
 
 # Cell Configuration
