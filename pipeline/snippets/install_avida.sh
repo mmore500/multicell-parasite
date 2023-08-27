@@ -24,7 +24,7 @@ while ! [ -L "${TMPDIR}/${AVIDA_REVISION}-${RUNMODE}" ]; do
     git checkout "${AVIDA_REVISION}"
     git submodule update --init --recursive
     git submodule foreach --recursive git status
-    if [ "${RUNMODE}" == "TESTING" ]; then
+    if [ "${RUNMODE}" == "testing" ]; then
         ./build_avida -DCMAKE_BUILD_TYPE=Debug
     else
         ./build_avida
