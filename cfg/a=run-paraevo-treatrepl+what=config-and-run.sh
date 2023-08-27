@@ -423,6 +423,7 @@ $(
 
 u 0:100 PrintParasiteData ParasiteData.dat
 u 0:100 PrintCountData
+u 0:100 PrintDemeOrgGermlineSequestration
 
 u 5000 PrintHostPhenotypeData
 u 5000 PrintParasitePhenotypeData
