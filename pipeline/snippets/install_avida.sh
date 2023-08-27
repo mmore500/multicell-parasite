@@ -1,12 +1,15 @@
 #!/bin/bash
 
+RUNMODE=${RUNMODE:-PRODUCTION}
+echo "RUNMODE ${RUNMODE}"
+
 export TMPDIR="${HOME}/scratch/tmp"
 mkdir -p "${TMPDIR}"
 
 AVIDA_REVISION="64f1b03ce30c5aa341e9704d4ff0f6109a375f1f"
 echo "AVIDA_REVISION ${AVIDA_REVISION}"
 
-while ! [ -L "${TMPDIR}/${AVIDA_REVISION}" ]; do
+while ! [ -L "${TMPDIR}/${AVIDA_REVISION}-${RUNMODE}" ]; do
 
   AVIDA_INSTALL_PATH="$(mktemp -d)"
   echo "AVIDA_INSTALL_PATH ${AVIDA_INSTALL_PATH}"
@@ -28,11 +31,11 @@ while ! [ -L "${TMPDIR}/${AVIDA_REVISION}" ]; do
     fi
   )
 
-  ln -s "${AVIDA_INSTALL_PATH}" "${TMPDIR}/${AVIDA_REVISION}" || :
+  ln -s "${AVIDA_INSTALL_PATH}" "${TMPDIR}/${AVIDA_REVISION}-${RUNMODE}" || :
 
 done
 
-export AVIDA="${TMPDIR}/${AVIDA_REVISION}/cbuild/work/avida"
+export AVIDA="${TMPDIR}/${AVIDA_REVISION}-${RUNMODE}/cbuild/work/avida"
 "${AVIDA}" -version
 
 unset TMPDIR
