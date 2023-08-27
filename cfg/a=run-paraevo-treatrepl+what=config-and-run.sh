@@ -87,7 +87,7 @@ case "${TREATMENT}" in
   *ecohost*)
     echo "ecohost case"
     evoeco=1
-    if ${evohost:-false}; then echo "clashing treatment ${TREATMENT}"; exit 1; fi
+    if ((${evohost:-0})); then echo "clashing treatment ${TREATMENT}"; exit 1; fi
     export GERMLINE_COPY_MUT=0
 
   ;;&
@@ -105,7 +105,7 @@ case "${TREATMENT}" in
     monopoly=1
     echo "polyhost case"
     export NUM_DEME_PARTITIONS="${NUM_DEME_PARTITIONS:-4}"
-    if ${monohost:-false}; then echo "clashing treatment ${TREATMENT}"; exit 1; fi
+    if ((${monohost:-0})); then echo "clashing treatment ${TREATMENT}"; exit 1; fi
     # nop
   ;;&
 esac
