@@ -22,6 +22,7 @@ then
 
 echo "venv cache available at ${VENV_CACHE_PATH}"
 VENV_PATH="${VENV_CACHE_PATH}"
+source "${VENV_PATH}/bin/activate"
 
 else
 
