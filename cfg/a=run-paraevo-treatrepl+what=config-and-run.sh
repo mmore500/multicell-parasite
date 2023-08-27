@@ -151,19 +151,19 @@ RANDOM_SEED ${RANDOM_SEED}
 # Deme seeding method.
 # 0 = Maintain old consistency
 # 1 = New method using genotypes
-DEMES_SEED_METHOD 1
+DEMES_SEED_METHOD 0
 
 # Number of organisms in a deme to trigger its replication (0 = OFF).
 DEMES_REPLICATE_ORGS ${NUM_CELLS_PER_DEME}
 
 # Deme divide method.
 # Only works with DEMES_SEED_METHOD 1
-# 0 = Replace and target demes
+# 0 = Replace source and target demes
 # 1 = Replace target deme, reset source deme to founders
 # 2 = Replace target deme, leave source deme unchanged
 # 3 = Replace the target deme, and reset the number of resources consumed by the source deme.
 # 4 = Replace the target deme,  reset the number of resources consumed by the source deme, and kill the germ line organisms of the source deme
-DEMES_DIVIDE_METHOD 2
+DEMES_DIVIDE_METHOD 0
 
 # divide hosts into separate subpopulations of five deme slots
 DEMES_PARTITION_INTERVAL ${DEMES_PARTITION_INTERVAL}
