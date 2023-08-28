@@ -16,7 +16,7 @@ mkdir -p "${HOME}/joblog" || :
 if [[ -z ${SLURM_JOB_ID:-} ]]; then
   export JOBLOG_PATH="/dev/null"
 else
-  export JOBLOG_PATH="${HOME}"/joblog/*id="${SLURM_JOB_ID}"+*
+  export JOBLOG_PATH="$(ls "${HOME}/joblog/"*"id=${SLURM_JOB_ID}+"*)"
 fi
 echo "JOBLOG_PATH ${JOBLOG_PATH}"
 
