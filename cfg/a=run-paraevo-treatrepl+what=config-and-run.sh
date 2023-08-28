@@ -201,13 +201,16 @@ DEMES_PREFER_EMPTY 1
 # 2 = Two adjacent demes in list
 # 3 = Proportional based on the number of points
 # 4 = Use the weight matrix specified in MIGRATION_FILE
-DEMES_MIGRATION_METHOD 0
+DEMES_MIGRATION_METHOD 4  # necessary for parasite migration
 
 # Probability of a parasite migrating to a different deme
+# NOTE: only works with DEMES_MIGRATION_METHOD 4
 DEMES_PARASITE_MIGRATION_RATE 0.002
 
 # Probability of an offspring being born in a different deme.
 DEMES_MIGRATION_RATE 0.0
+
+MIGRATION_FILE migration.mat
 
 # Log deme replications?
 LOG_DEMES_REPLICATE 1
@@ -333,6 +336,34 @@ MAX_CPU_THREADS 2
 
 #Parasites use the TransSMT simulated hardware, which is setup in this weird way
 #include INST_SET=instset-transsmt.cfg
+EOF
+#______________________________________________________________________________
+
+
+#==============================================================================
+# migration.mat
+#==============================================================================
+
+echo "NUM_DEMES ${NUM_DEMES}"
+
+python3 - << EOF
+import numpy as np
+num_demes = ${NUM_DEMES}
+migration_mat = np.ones((num_demes, num_demes), dtype=int)
+assert num_demes % 2 == 0
+
+# disabled resevoir population logic
+# i.e.,
+# to
+# r  r  t  t
+# 1, 1, 1, 1  # from resevoir
+# 1, 1, 1, 1  # from resevoir
+# 0, 0, 1, 1  # from target population
+# 0, 0, 1, 1  # from target population
+# migration_mat[num_demes//2:,:num_demes//2] = 0
+# assert migration_mat.sum().sum() == 3 * num_demes * num_demes // 4
+
+np.savetxt('migration.mat', migration_mat, delimiter=",")
 EOF
 #______________________________________________________________________________
 
