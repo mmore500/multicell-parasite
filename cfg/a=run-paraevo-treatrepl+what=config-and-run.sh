@@ -205,7 +205,7 @@ DEMES_MIGRATION_METHOD 4  # necessary for parasite migration
 
 # Probability of a parasite migrating to a different deme
 # NOTE: only works with DEMES_MIGRATION_METHOD 4
-DEMES_PARASITE_MIGRATION_RATE 0.002
+DEMES_PARASITE_MIGRATION_RATE 0.2
 
 # Probability of an offspring being born in a different deme.
 DEMES_MIGRATION_RATE 0.0
