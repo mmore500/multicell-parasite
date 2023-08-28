@@ -4,6 +4,12 @@ set -e
 set -o nounset
 shopt -s globstar
 
+# log context
+echo "date $(date)"
+echo "hostname $(hostname)"
+echo "job ${SLURM_JOB_ID:-none}"
+echo "user ${USER}"
+
 ln -s "${HOME}/scratch" "/mnt/scratch/${USER}/" || :
 mkdir -p "${HOME}/joblog" || :
 
