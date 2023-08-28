@@ -447,7 +447,9 @@ $(
   if [ "${EPOCH}" -eq 0 ]; then
     for pos in $(seq 0 4 "$(( WORLD_SIZE - 1 ))"); do
       smear_delay="$(( (NUM_UPDATES_INTRO_SMEAR * pos) / WORLD_SIZE  ))"
-      echo "u $(( 2000 + smear_delay )) InjectParasite parasite-smt.org ABB ${pos}"
+      # echo "u $(( 2000 + smear_delay )) InjectParasite parasite-smt.org ABB ${pos}"
+      # don't smear parasites
+      # echo "u 2000 InjectParasite parasite-smt.org ABB ${pos}"
     done
   fi
 )
