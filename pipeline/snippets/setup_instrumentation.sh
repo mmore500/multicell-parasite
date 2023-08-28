@@ -21,7 +21,7 @@ fi
 echo "JOBLOG_PATH ${JOBLOG_PATH}"
 
 mkdir -p "${HOME}/joblatest" || :
-ln -s "${JOBLOG_PATH}" "${HOME}/joblatest/start" || :
+ln -srfT "${JOBLOG_PATH}" "${HOME}/joblatest/start" || :
 
 export JOBSCRIPT_PATH="$0"
 echo "JOBSCRIPT_PATH ${JOBSCRIPT_PATH}"
@@ -46,8 +46,8 @@ trap 'err $LINENO' ERR
 
 on_exit() {
   if [[ $? -eq 0 ]]; then
-    ln -s "${JOBLOG_PATH}" "${HOME}/joblatest/succeed" || :
+    ln -srfT "${JOBLOG_PATH}" "${HOME}/joblatest/succeed" || :
   fi
-  ln -s "${JOBLOG_PATH}" "${HOME}/joblatest/finish" || :
+  ln -srfT "${JOBLOG_PATH}" "${HOME}/joblatest/finish" || :
 }
 trap on_exit EXIT
