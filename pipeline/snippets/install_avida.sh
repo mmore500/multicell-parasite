@@ -6,7 +6,7 @@ echo "RUNMODE ${RUNMODE}"
 export TMPDIR="${HOME}/scratch/tmp"
 mkdir -p "${TMPDIR}"
 
-AVIDA_REVISION="a6ee50d5b9fca61a049894e3972f0863c8c57e00"
+AVIDA_REVISION="2df14a7f41ea971c95a71c9befc96c8677ae15c0"
 echo "AVIDA_REVISION ${AVIDA_REVISION}"
 
 while ! [ -L "${TMPDIR}/${AVIDA_REVISION}-${RUNMODE}" ]; do

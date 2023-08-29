@@ -427,6 +427,7 @@ cat << EOF > "events.cfg"
 $(
   if [ "${EPOCH}" -eq 0 ]; then
     echo "i LoadPopulation host-parasite-smt.spop"
+    echo "i LoadGermlines host-smt.gpop"
   fi
 )
 
@@ -476,6 +477,7 @@ u 5000 PrintCountData         # Count organisms, genotypes, species, etc.
 u 5000 PrintTimeData          # Track time conversion (generations, etc.)
 u 5000 PrintMigrationData
 u 5000 SavePopulation
+u 5000 SaveGermlines
 
 u 5000 Exit
 EOF

@@ -144,6 +144,7 @@ while :; do
 EOF
 
   cp "\${LOAD_POPULATION_PATH}" host-parasite-smt.spop
+  cp "\$(dirname \${LOAD_POPULATION_PATH})/"*.gpop host-smt.gpop
 
   export RANDOM_SEED="\$(cksum <<< "{{ treatment }} {{ replicate }} \${EPOCH_COUNTER}" | cut -f 1 -d ' ')"
   echo "RANDOM_SEED \${RANDOM_SEED}"
