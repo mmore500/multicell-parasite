@@ -121,8 +121,17 @@ while :; do
 
 if [[ \${EPOCH_COUNTER} -ne 0 ]]; then
 
-  # create provlog
+  # create provlog; appended below
   cp "\${LOAD_POPULATION_PROVLOG_PATH}" "provlog.yaml"
+
+  cp "\${LOAD_POPULATION_PATH}" host-parasite-smt.spop
+
+else
+
+echo "SKIPPING POPULATION SETUP --- EPOCH 0"
+
+fi
+
   cat << EOF >> "provlog.yaml"
 -
   a: provlog.yaml
@@ -144,14 +153,6 @@ if [[ \${EPOCH_COUNTER} -ne 0 ]]; then
   step_path: \$(readlink -f "\${STEP_PATH}")
   batch_path: \$(readlink -f "\${BATCH_PATH}")
 EOF
-
-  cp "\${LOAD_POPULATION_PATH}" host-parasite-smt.spop
-
-else
-
-echo "SKIPPING POPULATION SETUP --- EPOCH 0"
-
-fi
 
   export RANDOM_SEED="\$(cksum <<< "{{ treatment }} {{ replicate }} \${EPOCH_COUNTER}" | cut -f 1 -d ' ')"
   echo "RANDOM_SEED \${RANDOM_SEED}"

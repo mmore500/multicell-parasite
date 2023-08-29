@@ -120,8 +120,22 @@ while :; do
   echo "LOAD_POPULATION_PROVLOG_PATH \${LOAD_POPULATION_PROVLOG_PATH}"
 
   if [[ \${EPOCH_COUNTER} -ne 0 ]]; then
-  # create provlog
+  # create provlog; appended below
   cp "\${LOAD_POPULATION_PROVLOG_PATH}" "provlog.yaml"
+
+  echo "LOAD_POPULATION_PATH \${LOAD_POPULATION_PATH}"
+  cp "\${LOAD_POPULATION_PATH}" host-parasite-smt.spop
+  LOAD_POPULATION_DIR="\$(dirname "\${LOAD_POPULATION_PATH}")"
+  LOAD_GERMLINES_PATH="\${LOAD_POPULATION_DIR}/"*.gpop
+  echo "LOAD_GERMLINES_PATH \${LOAD_GERMLINES_PATH}"
+  cp "\${LOAD_GERMLINES_PATH}" host-smt.gpop
+
+else
+
+echo "SKIPPING POPULATION AND GERMLINES SETUP --- EPOCH 0"
+
+fi
+
   cat << EOF >> "provlog.yaml"
 -
   a: provlog.yaml
@@ -143,19 +157,6 @@ while :; do
   step_path: \$(readlink -f "\${STEP_PATH}")
   batch_path: \$(readlink -f "\${BATCH_PATH}")
 EOF
-
-  echo "LOAD_POPULATION_PATH \${LOAD_POPULATION_PATH}"
-  cp "\${LOAD_POPULATION_PATH}" host-parasite-smt.spop
-  LOAD_POPULATION_DIR="\$(dirname "\${LOAD_POPULATION_PATH}")"
-  LOAD_GERMLINES_PATH="\${LOAD_POPULATION_DIR}/"*.gpop
-  echo "LOAD_GERMLINES_PATH \${LOAD_GERMLINES_PATH}"
-  cp "\${LOAD_GERMLINES_PATH}" host-smt.gpop
-
-else
-
-echo "SKIPPING POPULATION AND GERMLINES SETUP --- EPOCH 0"
-
-fi
 
   export RANDOM_SEED="\$(cksum <<< "{{ treatment }} {{ replicate }} \${EPOCH_COUNTER}" | cut -f 1 -d ' ')"
   echo "RANDOM_SEED \${RANDOM_SEED}"
