@@ -143,8 +143,12 @@ while :; do
   batch_path: \$(readlink -f "\${BATCH_PATH}")
 EOF
 
+  echo "LOAD_POPULATION_PATH \${LOAD_POPULATION_PATH}"
   cp "\${LOAD_POPULATION_PATH}" host-parasite-smt.spop
-  cp "\$(dirname \${LOAD_POPULATION_PATH})/"*.gpop host-smt.gpop
+  LOAD_POPULATION_DIR="\$(dirname "\${LOAD_POPULATION_PATH}")"
+  LOAD_GERMLINES_PATH="\${LOAD_POPULATION_DIR}/"*.gpop
+  echo "LOAD_GERMLINES_PATH \${LOAD_GERMLINES_PATH}"
+  cp "\${LOAD_GERMLINES_PATH}" host-smt.gpop
 
   export RANDOM_SEED="\$(cksum <<< "{{ treatment }} {{ replicate }} \${EPOCH_COUNTER}" | cut -f 1 -d ' ')"
   echo "RANDOM_SEED \${RANDOM_SEED}"
