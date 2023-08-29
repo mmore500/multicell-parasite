@@ -265,7 +265,7 @@ COPY_UNIFORM_PROB 0
 COPY_SLIP_PROB 0
 
 # Substitution rate (per site, applied on divide)
-DIV_MUT_PROB 0.001000
+DIV_MUT_PROB 0.0
 # Insertion rate (per site, applied on divide)
 DIV_INS_PROB 0.0
 # Deletion rate (per site, applied on divide)
