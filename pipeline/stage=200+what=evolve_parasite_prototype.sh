@@ -36,7 +36,7 @@ source snippets/setup_production_dependencies.sh
 echo "PWD ${PWD}"
 
 CONFIG_AND_RUN="$(
-  cat ../cfg/a=run-paraevo-treatrepl+what=config-and-run.sh | sed 's/^/  /'
+  cat ../cfg/a=evolve-parasite-prototype+what=config-and-run.sh | sed 's/^/  /'
 )"
 
 CONTINUATION_TEMPLATE="$(
