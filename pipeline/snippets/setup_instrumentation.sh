@@ -40,7 +40,7 @@ touch "${JOBCONT_PATH}"
 err() {
     echo "Error occurred:"
     awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L="$1" "$0"
-    ln -s "${JOBLOG_PATH}" "${HOME}/joblatest/fail" || :
+    ln -srfT "${JOBLOG_PATH}" "${HOME}/joblatest/fail" || :
 }
 trap 'err $LINENO' ERR
 
