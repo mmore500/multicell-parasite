@@ -425,7 +425,7 @@ cat << EOF > "events.cfg"
 
 # need to prevent extinction abort on startup
 $(
-  if [ "${EPOCH}" -eq 0 ]; then
+  if [ "${EPOCH}" -ne 0 ]; then
     echo "i LoadPopulation host-parasite-smt.spop"
   fi
 )
