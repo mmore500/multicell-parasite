@@ -47,8 +47,8 @@ echo "NUM_HOST_SEQS ${NUM_HOST_SEQS}"
 export AVIDA="${AVIDA:-./avida}"
 echo "AVIDA ${AVIDA}"
 
-export EPOCH="${EPOCH:-0}"
-echo "EPOCH ${EPOCH}"
+export EPOCH_="${EPOCH_:-${EPOCH_COUNTER:-${EPOCH:-0}}}"
+echo "EPOCH_ ${EPOCH__}"
 
 export REPLICATE="${REPLICATE:-0}"
 echo "REPLICATE ${REPLICATE}"
@@ -425,7 +425,7 @@ cat << EOF > "events.cfg"
 
 # need to prevent extinction abort on startup
 $(
-  if [ "${EPOCH}" -ne 0 ]; then
+  if [ "${EPOCH_}" -ne 0 ]; then
     echo "i LoadPopulation host-parasite-smt.spop"
   fi
 )
@@ -444,7 +444,7 @@ $(
 
 # Let the hosts grow a bit, then inject parasites
 $(
-  if [ "${EPOCH}" -eq 0 ]; then
+  if [ "${EPOCH_}" -eq 0 ]; then
   echo "u 2000:1 InjectParasite parasite-smt.org ABB 0 ${WORLD_SIZE} 2 1"
   else
   echo "u 0:1 InjectParasite parasite-smt.org ABB 0 ${WORLD_SIZE} 2 1"
