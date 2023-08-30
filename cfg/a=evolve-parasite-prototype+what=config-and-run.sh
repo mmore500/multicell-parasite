@@ -48,7 +48,7 @@ export AVIDA="${AVIDA:-./avida}"
 echo "AVIDA ${AVIDA}"
 
 export EPOCH_="${EPOCH_:-${EPOCH_COUNTER:-${EPOCH:-0}}}"
-echo "EPOCH_ ${EPOCH__}"
+echo "EPOCH_ ${EPOCH_}"
 
 export REPLICATE="${REPLICATE:-0}"
 echo "REPLICATE ${REPLICATE}"
