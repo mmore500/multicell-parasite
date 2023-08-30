@@ -47,6 +47,7 @@ echo "NUM_HOST_SEQS ${NUM_HOST_SEQS}"
 export AVIDA="${AVIDA:-./avida}"
 echo "AVIDA ${AVIDA}"
 
+echo "pre EPOCH_ ${EPOCH_:-} EPOCH_COUNTER ${EPOCH_COUNTER:-} EPOCH ${EPOCH:-}"
 export EPOCH_="${EPOCH_:-${EPOCH_COUNTER:-${EPOCH:-0}}}"
 echo "EPOCH_ ${EPOCH_}"
 
@@ -615,3 +616,6 @@ EOF
 
 "${AVIDA}" -c avida.cfg -r  # review config settings
 "${AVIDA}" -c avida.cfg
+
+unset EPOCH_
+echo "unset EPOCH_ ${EPOCH_:-}"
