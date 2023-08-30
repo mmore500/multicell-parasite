@@ -428,7 +428,7 @@ cat << EOF > "events.cfg"
 $(
   if [ "${EPOCH_}" -ne 0 ]; then
     echo "i LoadPopulation host-parasite-smt.spop"
-    echo "i LoadGermlines host-smt.gpop"
+    echo "i LoadGermlines host-smt.sgerm"
   else
     echo "i InjectSequence ${HOST_SEQS%% *} 0"
 
