@@ -429,19 +429,17 @@ $(
   if [ "${EPOCH_}" -ne 0 ]; then
     echo "i LoadPopulation host-parasite-smt.spop"
     echo "i LoadGermlines host-smt.gpop"
+  else
+    echo "i InjectSequence ${HOST_SEQS%% *} 0"
+
+    for ((deme=0; deme<${NUM_DEMES}; deme++)); do
+      host_org_idx="$((deme / DEMES_PARTITION_INTERVAL))"
+      host_org_seq="$(echo ${HOST_SEQS} | cut -d " " -f "$((host_org_idx + 1))")"
+      smear_delay="$(( (NUM_UPDATES_INTRO_SMEAR * deme) / NUM_DEMES))"
+      target_cell_idx="$((deme * NUM_CELLS_PER_DEME))"
+      echo "u ${smear_delay} InjectSequence ${host_org_seq} ${target_cell_idx}"
+    done
   fi
-)
-
-i InjectSequence ${HOST_SEQS%% *} 0
-
-$(
-  for ((deme=0; deme<${NUM_DEMES}; deme++)); do
-    host_org_idx="$((deme / DEMES_PARTITION_INTERVAL))"
-    host_org_seq="$(echo ${HOST_SEQS} | cut -d " " -f "$((host_org_idx + 1))")"
-    smear_delay="$(( (NUM_UPDATES_INTRO_SMEAR * deme) / NUM_DEMES))"
-    target_cell_idx="$((deme * NUM_CELLS_PER_DEME))"
-    echo "u ${smear_delay} InjectSequence ${host_org_seq} ${target_cell_idx}"
-  done
 )
 
 # Let the hosts grow a bit, then inject parasites
