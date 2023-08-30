@@ -20,7 +20,7 @@ git -C "${GITDIR}" diff --quiet HEAD -- "${GITDIR}/requirements.txt" || {
 }
 
 
-if test -d "${VENV_CACHE_PATH}"
+if test -d "${VENV_CACHE_PATH}" && [[ -n "${REVISION}" ]]
 then
 
 
@@ -31,6 +31,7 @@ source "${VENV_PATH}/bin/activate"
 else
 
 echo "no eligible venv cache available at ${VENV_CACHE_PATH}"
+echo "maybe revision isn't set?"
 VENV_PATH="$(mktemp -d)"  # uses $TMPDIR
 echo "VENV_PATH ${VENV_PATH}"
 
