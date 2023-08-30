@@ -252,6 +252,12 @@ AGE_LIMIT 30
 # MUTATION CONFIGURATION
 #------------------------------------------------------------------------------
 
+# should be redundant with disabling indel mutations, but
+# parasites are somehow figuring out how to shrink anyways
+# (likely due to bug in Avida :/)
+# note: hosts have a larger genome size of 240 :)
+MIN_GENOME_SIZE 80
+
 # Substitution rate (per copy)
 # We assign mtuation rates independently for hosts/parasites
 COPY_MUT_PROB 0
