@@ -126,6 +126,7 @@ while :; do
   echo "LOAD_POPULATION_PATH \${LOAD_POPULATION_PATH}"
   cp "\${LOAD_POPULATION_PATH}" host-parasite-smt.spop
   LOAD_POPULATION_DIR="\$(dirname "\${LOAD_POPULATION_PATH}")"
+  ls "\${LOAD_POPULATION_DIR}"
   LOAD_GERMLINES_PATH="\$(ls "\${LOAD_POPULATION_DIR}/"*.sgerm)"
   echo "LOAD_GERMLINES_PATH \${LOAD_GERMLINES_PATH}"
   cp "\${LOAD_GERMLINES_PATH}" host-smt.gpop
