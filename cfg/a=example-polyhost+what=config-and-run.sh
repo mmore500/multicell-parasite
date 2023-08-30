@@ -65,7 +65,7 @@ DEMES_REPLICATE_ORGS ${NUM_CELLS_PER_DEME}
 
 # Deme divide method.
 # Only works with DEMES_SEED_METHOD 1
-# 0 = Replace and target demes
+# 0 = Replace source and target demes
 # 1 = Replace target deme, reset source deme to founders
 # 2 = Replace target deme, leave source deme unchanged
 # 3 = Replace the target deme, and reset the number of resources consumed by the source deme.
