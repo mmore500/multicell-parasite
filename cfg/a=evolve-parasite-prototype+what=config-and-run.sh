@@ -445,9 +445,9 @@ $(
 # Let the hosts grow a bit, then inject parasites
 $(
   if [ "${EPOCH}" -eq 0 ]; then
-  u 2000:1 InjectParasite parasite-smt.org ABB 0 ${WORLD_SIZE} 2 1
+  echo "u 2000:1 InjectParasite parasite-smt.org ABB 0 ${WORLD_SIZE} 2 1"
   else
-  u 0:1 InjectParasite parasite-smt.org ABB 0 ${WORLD_SIZE} 2 1
+  echo "u 0:1 InjectParasite parasite-smt.org ABB 0 ${WORLD_SIZE} 2 1"
   fi
 )
 
