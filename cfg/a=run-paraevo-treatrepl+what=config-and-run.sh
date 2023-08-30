@@ -53,16 +53,16 @@ echo "EPOCH_ ${EPOCH_}"
 export REPLICATE="${REPLICATE:-0}"
 echo "REPLICATE ${REPLICATE}"
 
-export WORLD_X="${WORLD_X:-35}"
+export WORLD_X="${WORLD_X:-25}"
 echo "WORLD_X ${WORLD_X}"
 
-export WORLD_Y="${WORLD_Y:-700}"
+export WORLD_Y="${WORLD_Y:-1000}"
 echo "WORLD_Y ${WORLD_Y}"
 
 export WORLD_SIZE="$((WORLD_X * WORLD_Y))"
 echo "WORLD_SIZE ${WORLD_SIZE}"
 
-export NUM_DEMES="${NUM_DEMES:-20}"
+export NUM_DEMES="${NUM_DEMES:-40}"
 echo "NUM_DEMES ${NUM_DEMES}"
 
 export NUM_CELLS_PER_DEME="$((WORLD_SIZE / NUM_DEMES))"
