@@ -6,7 +6,11 @@ echo "REVISION ${REVISION}"
 module purge || :
 module load GCCcore/11.3.0 git/2.36.0-nodocs Python/3.10.4 binutils/2.39 || :
 
-VENV_CACHE_PATH="/tmp/venv-${REVISION}"
+ln -s "${HOME}/scratch" "/mnt/scratch/${USER}/" || :
+export TMPDIR="${HOME}/scratch/tmp"
+mkdir -p "${TMPDIR}"
+
+VENV_CACHE_PATH="/${TMPDIR}/venv-${REVISION}"
 echo "VENV_CACHE_PATH ${VENV_CACHE_PATH}"
 
 GITDIR="$(git rev-parse --show-toplevel)"  # absolute path
@@ -27,7 +31,7 @@ source "${VENV_PATH}/bin/activate"
 else
 
 echo "no eligible venv cache available at ${VENV_CACHE_PATH}"
-VENV_PATH="$(mktemp -d)"
+VENV_PATH="$(mktemp -d)"  # uses $TMPDIR
 echo "VENV_PATH ${VENV_PATH}"
 
 for try in {0..9}; do

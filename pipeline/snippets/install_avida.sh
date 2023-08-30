@@ -11,7 +11,7 @@ echo "AVIDA_REVISION ${AVIDA_REVISION}"
 
 while ! [ -L "${TMPDIR}/${AVIDA_REVISION}-${RUNMODE}" ]; do
 
-  AVIDA_INSTALL_PATH="$(mktemp -d)"
+  AVIDA_INSTALL_PATH="$(mktemp -d)"  # uses $TMPDIR
   echo "AVIDA_INSTALL_PATH ${AVIDA_INSTALL_PATH}"
 
   git clone https://github.com/devosoft/Avida.git "${AVIDA_INSTALL_PATH}"
