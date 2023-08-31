@@ -531,89 +531,95 @@ INST Divide-Erase
 EOF
 #______________________________________________________________________________
 
+
+
 #==============================================================================
 # parasite-smt.org
 #==============================================================================
+# provlog and materials: https://osf.io/reqts
+# ppreevolved via stage 200 step
+# SEED_PARA_SEQ
+# ycdAEcrlenbiErnEcEgctuccwwcgEocaEcxcxdmyEfiCmCEvanvbecvmsbEcaccncdoypqvcrFxppxab
 cat << 'EOF' > "parasite-smt.org"
-Search       #  1:  Find organism end.
-Nop-C        #  2:  - Match CD:AB
+Search
+Nop-C
 Nop-D
-Push-Prev    #  5:  Move end position to Stack-A
-SetMemory    #  6:  Place FLOW-head in memory space for offspring
-Nop-A
-Head-Move    #  7:  Move Write head to flow head position
-Nop-C        #  8:
-Nop-C
-Nop-C        #  8:
-Nop-C      #  8:
-Nop-C
-Nop-C
-IO
-IO
+Push-Prev
 IO
 Nop-C
-Nop-C        #  8:
-Nop-C        #  8:
-Nop-C        #  8:
+If-Equal
+Val-Mod
+Val-Shift-R
+Val-Dec
+Nop-B
+Val-Sub
+IO
+If-Equal
+Val-Dec
+IO
 Nop-C
-Nop-C        #  8:
-Nop-C
-Nop-C        #  8:
-Nop-C        #  8:
-Nop-C
-Nop-C        #  8:
+IO
 Val-Nand
-Nop-C        #  8:
-Nop-C        #  8:
-Nop-C        #  8:
 Nop-C
-Nop-C        #  8:
-Nop-C #IO
-Nop-C #IO
-Nop-C      #  8:
+If-Less
+If-Greater
 Nop-C
 Nop-C
+Head-Pop
+Head-Pop
 Nop-C
-Nop-C        #  8:
-Nop-C        #  8:
-Nop-C        #  8:
-Nop-C        #  8:
+Val-Nand
+IO
+SetMemory
 Nop-C
-Nop-C
-Nop-C
+Nop-A
 IO
 Nop-C
+Head-Move
 Nop-C
-Nop-C
-Nop-C
-Nop-C
-Nop-C
-Nop-C        #  8:
-Nop-C
-Nop-C        #  8:
-Nop-C        #  8:
-Nop-C
-Nop-C
-Nop-C
-Nop-C
-Nop-C        #  8:
-Nop-C        #  8:
-Nop-C
-Nop-C        #  8:
-Nop-C #Val-Nand
-Nop-C
-Search       #  9:  Drop flow head at start of copy loop
-Inst-Read    # 10:
-Inst-Write   # 11:
-Head-Push    # 12:  Get current position of...
-Nop-C        # 13:  - Read-Head
-If-Equal     # 14:  Test if we are done copying...
-Inject
+Head-Move
+Nop-D
+Val-Inc
+Search
+IO
+Val-Shift-L
+Val-Sub
+Val-Delete
+Val-Inc
+Val-Delete
+IO
+Head-Push
 Nop-A
+Val-Dec
+Head-Push
+Nop-B
+Val-Shift-R
+Nop-C
+Head-Push
+Val-Inc
+If-Not-Equal
+Nop-B
+IO
+Nop-C
+Nop-A
+Nop-C
+Nop-C
+Val-Dec
+Nop-C
 Nop-D
-Nop-D
-Head-Move    # 16:  ...If not, continue with loop.
-Nop-A        # 17:
+SetMemory
+Search
+Inst-Read
+Inst-Write
+Head-Push
+Nop-C
+If-Equal
+Inject
+Head-Move
+Inst-Read
+Inst-Read
+Head-Move
+Nop-A
 Nop-B
 EOF
 #______________________________________________________________________________
