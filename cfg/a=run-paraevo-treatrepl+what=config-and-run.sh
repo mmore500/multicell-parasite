@@ -341,6 +341,10 @@ PARASITE_VIRULENCE 0.85
 # Maximum number of Threads a CPU can spawn
 MAX_CPU_THREADS 2
 
+# Should inject instruction be a no-op for non-parasites?
+# Prevents host-generated pseudo-parasites. 0 for no, 1 for yes.
+TRANSSMT_DISABLE_NONPARASITE_INJECT 1
+
 #Parasites use the TransSMT simulated hardware, which is setup in this weird way
 #include INST_SET=instset-transsmt.cfg
 EOF
