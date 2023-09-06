@@ -308,6 +308,7 @@ GERMLINE_DEL_MUT 0.0
 # Should genotypes that cannot replicate perfectly not be allowed to replicate?
 STERILIZE_UNSTABLE 1
 
+GENOME_SIZE_RECOVERY 2  # sterilize too-small or too-large genomes
 
 
 # PARASITE CONFIGURATION
