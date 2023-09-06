@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RUNMODE=${RUNMODE:-PRODUCTION}
+RUNMODE=${RUNMODE:-production}
 echo "RUNMODE ${RUNMODE}"
 
 export TMPDIR="${HOME}/scratch/tmp"
