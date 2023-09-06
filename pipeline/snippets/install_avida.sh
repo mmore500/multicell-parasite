@@ -9,7 +9,7 @@ mkdir -p "${TMPDIR}"
 AVIDA_REVISION="9d5f7f5bf60e19bc9327312fc3d495137b33e88c"
 echo "AVIDA_REVISION ${AVIDA_REVISION}"
 
-while ! [ -L "${TMPDIR}/${AVIDA_REVISION}-${RUNMODE}" ]; do
+while ! [ -e "${TMPDIR}/${AVIDA_REVISION}-${RUNMODE}" ]; do
 
   AVIDA_INSTALL_PATH="$(mktemp -d)"  # uses $TMPDIR
   echo "AVIDA_INSTALL_PATH ${AVIDA_INSTALL_PATH}"
