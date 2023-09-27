@@ -282,7 +282,7 @@ def try_process_one_path(path: str) -> pd.DataFrame:
     return pd.DataFrame()
 
 spop_paths = [*glob.glob(
-    "${DATA_PATH}/stage=201+what=run_paraevo_treatrepl/treatment=*/alph*replicate*/alph*epoch*/latest/data/detail*.spop",
+    "${DATA_PATH}/stage=201+what=run_paraevo_treatrepl/treatment=*/alph*replicate*/alph*epoch=${TARGET_EPOCH}/latest/data/detail*.spop",
     recursive=True,
 )]
 
@@ -298,6 +298,7 @@ with tqdm(total=len(spop_paths)) as pbar:
 pool.close()
 pool.join()
 
+print("concatenating master dataframe")
 master_df = pd.concat(
     dataframes,
     ignore_index=True,
