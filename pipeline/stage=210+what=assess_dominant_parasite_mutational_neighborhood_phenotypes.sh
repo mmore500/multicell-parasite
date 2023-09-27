@@ -10,6 +10,9 @@ cd "$(dirname "$0")"
 RUNMODE="${1}"
 echo "RUNMODE ${RUNMODE}"
 
+TARGET_EPOCH="${2}"
+echo "TARGET_EPOCH ${TARGET_EPOCH}"
+
 REVISION="$(git rev-parse --short HEAD)"
 echo "REVISION ${REVISION}"
 
@@ -48,9 +51,6 @@ echo "PWD ${PWD}"
 
 DATA_PATH="${HOME}/scratch/multicell-parasite/data/runmode=${RUNMODE}/"
 echo "DATA_PATH ${DATA_PATH}"
-
-TARGET_EPOCH=95
-echo "TARGET_EPOCH ${TARGET_EPOCH}"
 
 # provlog
 python3 - << EOF
@@ -304,11 +304,10 @@ master_df = pd.concat(
     ignore_index=True,
 )
 print("master dataframe concatenated")
-master_df.to_csv(
-  "${BATCH_PATH}/dominant-phenotype-summaries.csv",
-  index=False,
-)
-print("${BATCH_PATH}/dominant-phenotype-summaries.csv saved")
+
+outpath = "${BATCH_PATH}/what=dominant-phenotype-summaries+epoch=${TARGET_EPOCH}+ext=.csv"
+master_df.to_csv(outpath, index=False)
+print(f"{outpath} saved")
 EOF
 
 echo "fin"
