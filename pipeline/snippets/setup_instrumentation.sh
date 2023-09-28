@@ -44,10 +44,16 @@ err() {
 }
 trap 'err $LINENO' ERR
 
+# Capture the current EXIT trap (if any).
+existing_exit_trap=$(trap -p EXIT)
 on_exit() {
   if [[ $? -eq 0 ]]; then
     ln -srfT "${JOBLOG_PATH}" "${HOME}/joblatest/succeed" || :
   fi
   ln -srfT "${JOBLOG_PATH}" "${HOME}/joblatest/finish" || :
+
+  # Execute the existing EXIT trap commands (if any).
+  eval "${existing_exit_trap#trap -- }"
+
 }
 trap on_exit EXIT

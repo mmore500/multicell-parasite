@@ -27,6 +27,13 @@ echo "SCRIPT_PATH ${SCRIPT_PATH}"
 SOURCE_DIR="$(mktemp -d)"
 echo "SOURCE_DIR ${SOURCE_DIR}"
 
+cleanup() {
+    echo "Cleaning up ${SOURCE_DIR}..."
+    rm -rf "${SOURCE_DIR}"
+}
+# Set the trap to use the cleanup function upon exit.
+trap cleanup EXIT
+
 module purge || :
 module load ccache/3.3.3 GCCcore/11.3.0 CMake/3.23.1 git/2.36.0-nodocs binutils/2.39 || :
 git clone "${SOURCE_URL}" "${SOURCE_DIR}"
