@@ -8,7 +8,7 @@
 #SBATCH --mem=8G
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=8
 #SBATCH --mail-type=FAIL
 # No --mail-user, the default value is the submitting user
 #SBATCH --exclude=csn-002,amr-250
