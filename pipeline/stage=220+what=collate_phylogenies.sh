@@ -174,6 +174,7 @@ def process_one_path(path: str) -> pd.DataFrame:
         for path in glob.glob(f"{path}/alph*epoch*/latest/data/detail*.spop")
         if int(kn.unpack(path.replace("/", "+"))["epoch"]) < 95
     ]
+    sort(pop_paths, key=lambda path: kn.unpack(path.replace("/", "+"))["epoch"])
 
     pop_dfs = map(load_population_dataframe, pop_paths)
 
