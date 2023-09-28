@@ -61,4 +61,6 @@ done
 echo "setting venv cache at ${VENV_CACHE_PATH}"
 ln -s "${VENV_PATH}" "${VENV_CACHE_PATH}" || :
 
+unset TMPDIR  # prevent subsequent tempfiles from ending up in scratch
+
 fi
