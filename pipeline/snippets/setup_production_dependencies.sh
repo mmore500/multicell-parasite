@@ -42,6 +42,16 @@ echo "maybe revision isn't set?"
 VENV_PATH="$(mktemp -d)"  # uses $TMPDIR
 echo "VENV_PATH ${VENV_PATH}"
 
+echo "SETUP_VENV_ENABLE ${SETUP_VENV_ENABLE:-}"
+if [[ -n "${SETUP_VENV_ENABLE:-}" ]]; then
+    echo "SETUP_VENV_ENABLE is set and non-empty"
+    echo "continuing with venv cache creation"
+else
+    echo "SETUP_VENV_ENABLE is either unset or empty"
+    echo "aborting venv cache creation"
+    exit 1
+fi
+
 for try in {0..9}; do
   rm -rf "${VENV_PATH}"  \
   && python3 -m venv "${VENV_PATH}"  \
