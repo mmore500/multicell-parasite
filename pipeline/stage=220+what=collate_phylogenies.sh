@@ -175,7 +175,7 @@ def process_one_path(path: str) -> pd.DataFrame:
         if int(kn.unpack(path.replace("/", "+"))["epoch"]) < 95
     ]
 
-    pop_dfs = map(load_population_dataframe(pop_dfs, pop_paths)
+    pop_dfs = map(load_population_dataframe, pop_paths)
 
     stitched_df = stitch_population_phylogenies(
         pop_dfs,
@@ -211,7 +211,7 @@ print(f"processing {len(spop_paths)} spop paths...")
 
 dataframes = []
 with tqdm(total=len(spop_paths)) as pbar:
-    for result in mp(try_process_one_path, spop_paths):
+    for result in map(try_process_one_path, spop_paths):
         dataframes.append(result)  # Append the returned DataFrame to the list
         pbar.update()
 
