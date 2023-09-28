@@ -17,7 +17,7 @@ ln -s "${HOME}/scratch" "/mnt/scratch/${USER}/" || :
 TMPDIR_="${HOME}/scratch/tmp"
 mkdir -p "${TMPDIR_}"
 
-VENV_CACHE_PATH="/${TMPDIR}/venv-${REVISION}"
+VENV_CACHE_PATH="/${TMPDIR_}/venv-${REVISION}"
 echo "VENV_CACHE_PATH ${VENV_CACHE_PATH}"
 
 GITDIR="$(git rev-parse --show-toplevel)"  # absolute path
