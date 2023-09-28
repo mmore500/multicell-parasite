@@ -63,7 +63,7 @@ from tqdm import tqdm
 
 
 provlog_paths = [*glob.glob(
-    "${DATA_PATH}/stage=201+what=run_paraevo_treatrepl/treatment=*/alph*replicate*/alph*epoch*/latest/**/provlog.yaml",
+    "${DATA_PATH}/stage=201+what=run_paraevo_treatrepl/treatment=*/alph*replicate*/alph*epoch=${TARGET_EPOCH}/latest/**/provlog.yaml",
     recursive=True,
 )]
 
