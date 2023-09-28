@@ -28,7 +28,7 @@ SOURCE_DIR="$(mktemp -d)"
 echo "SOURCE_DIR ${SOURCE_DIR}"
 
 module purge || :
-module load GCCcore/11.3.0 git/2.36.0-nodocs || :
+module load ccache/3.3.3 GCCcore/11.3.0 CMake/3.23.1 git/2.36.0-nodocs binutils/2.39 || :
 git clone "${SOURCE_URL}" "${SOURCE_DIR}"
 git -C "${SOURCE_DIR}" checkout "${SOURCE_REVISION}"
 

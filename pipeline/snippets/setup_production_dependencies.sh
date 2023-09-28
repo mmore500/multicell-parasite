@@ -4,7 +4,14 @@
 echo "REVISION ${REVISION}"
 
 module purge || :
-module load GCCcore/11.3.0 git/2.36.0-nodocs Python/3.10.4 binutils/2.39 || :
+module load \
+  GCCcore/11.3.0 \
+  binutils/2.38 \
+  ccache/3.3.3 \
+  CMake/3.23.1 \
+  git/2.36.0-nodocs \
+  Python/3.10.4 \
+  || :
 
 ln -s "${HOME}/scratch" "/mnt/scratch/${USER}/" || :
 export TMPDIR="${HOME}/scratch/tmp"
