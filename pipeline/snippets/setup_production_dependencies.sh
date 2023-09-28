@@ -14,8 +14,8 @@ module load \
   || :
 
 ln -s "${HOME}/scratch" "/mnt/scratch/${USER}/" || :
-export TMPDIR="${HOME}/scratch/tmp"
-mkdir -p "${TMPDIR}"
+TMPDIR_="${HOME}/scratch/tmp"
+mkdir -p "${TMPDIR_}"
 
 VENV_CACHE_PATH="/${TMPDIR}/venv-${REVISION}"
 echo "VENV_CACHE_PATH ${VENV_CACHE_PATH}"
@@ -39,7 +39,7 @@ else
 
 echo "no eligible venv cache available at ${VENV_CACHE_PATH}"
 echo "maybe revision isn't set?"
-VENV_PATH="$(mktemp -d)"  # uses $TMPDIR
+VENV_PATH="$(mktemp -d "${TMPDIR_}/XXXXXX")"
 echo "VENV_PATH ${VENV_PATH}"
 
 echo "SETUP_VENV_ENABLE ${SETUP_VENV_ENABLE:-}"
@@ -70,7 +70,5 @@ done
 
 echo "setting venv cache at ${VENV_CACHE_PATH}"
 ln -s "${VENV_PATH}" "${VENV_CACHE_PATH}" || :
-
-unset TMPDIR  # prevent subsequent tempfiles from ending up in scratch
 
 fi
