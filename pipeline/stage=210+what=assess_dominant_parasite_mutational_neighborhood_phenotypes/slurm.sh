@@ -33,4 +33,5 @@ git clone "${SOURCE_URL}" "${SOURCE_DIR}"
 git -C "${SOURCE_DIR}" checkout "${SOURCE_REVISION}"
 
 # Run
-"${SOURCE_DIR}/${SCRIPT_PATH}" production "${SLURM_ARRAY_TASK_ID}"
+cd "${SOURCE_DIR}"
+"${SCRIPT_PATH}" production "${SLURM_ARRAY_TASK_ID}"
