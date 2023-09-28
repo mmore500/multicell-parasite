@@ -14,7 +14,7 @@ module load \
   || :
 
 ln -s "${HOME}/scratch" "/mnt/scratch/${USER}/" || :
-export TMPDIR="${HOME}/scratch/tmp"
+TMPDIR="${HOME}/scratch/tmp"
 mkdir -p "${TMPDIR}"
 
 VENV_CACHE_PATH="/${TMPDIR}/venv-${REVISION}"
