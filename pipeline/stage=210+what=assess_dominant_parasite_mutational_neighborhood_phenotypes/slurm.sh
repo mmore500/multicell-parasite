@@ -20,7 +20,7 @@ echo "SLURM_ARRAY_TASK_ID ${SLURM_ARRAY_TASK_ID}"
 
 SOURCE_URL="https://github.com/mmore500/multicell-parasite.git"
 echo "SOURCE_URL ${SOURCE_URL}"
-SOURCE_REVISION="5c9f6b0b61e969d6b1bb8a3cfcf981e809be1315"
+SOURCE_REVISION="9aa055e1fb157dfe30a53fb219f56ec175db426f"
 echo "SOURCE_REVISION ${SOURCE_REVISION}"
 SCRIPT_PATH="pipeline/stage=210+what=assess_dominant_parasite_mutational_neighborhood_phenotypes.sh"
 echo "SCRIPT_PATH ${SCRIPT_PATH}"
