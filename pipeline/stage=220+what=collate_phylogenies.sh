@@ -134,7 +134,8 @@ from AvidaScripts.GenericScripts.GenomeManipulation import (
     get_named_instset_content,
 )
 from AvidaScripts.GenericScripts.PhenotypeAssessment import (
-    assess_mutational_neighborhood_phenotypes,
+    assess_phenotypes,
+    assess_parasite_phenotypes,
     get_named_environment_content,
     summarize_mutational_neighborhood_phenotypes,
 )
@@ -185,10 +186,34 @@ def process_one_path(path: str) -> pd.DataFrame:
         mutate = True,
     )
 
-    for key, value in meta.items():
-        stitched_df[key] = value
+    environment_content = get_named_environment_content("top25")
+    instset_content = get_named_instset_content("transsmt")
 
-    return stitched_df
+    para_assessed_df = assess_parasite_phenotypes(
+        set(
+          stitched_df.loc[stitched_df["role"] == "parasite", "Genome Sequence"],
+        ),
+        environment_content,
+        instset_content,
+    )
+    para_assessed_df["role"] = "parasite"
+    host_assessed_df = assess_phenotypes(
+        set(stitched_df.loc[stitched_df["role"] == "host", "Genome Sequence"]),
+        environment_content,
+        instset_content,
+    )
+    host_assessed_df["role"] = "host"
+
+    assessed_df = pd.concat([para_assessed_df, host_assessed_df], axis=0)
+
+    complete_df = stitched_df.merge(
+        assessed_df, on=["role", "Genome Sequence"], how="left"
+    )
+
+    for key, value in meta.items():
+        complete_df[key] = value
+
+    return complete_df
 
 
 def try_process_one_path(path: str) -> pd.DataFrame:
