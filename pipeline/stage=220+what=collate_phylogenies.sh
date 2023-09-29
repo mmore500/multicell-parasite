@@ -237,9 +237,10 @@ spop_paths = [*glob.glob(
 
 print(f"processing {len(spop_paths)} spop paths...")
 
+pool = mp.Pool()
 dataframes = []
 with tqdm(total=len(spop_paths)) as pbar:
-    for result in map(try_process_one_path, spop_paths):
+    for result in pool.imap_unordered(try_process_one_path, provlog_paths):
         dataframes.append(result)  # Append the returned DataFrame to the list
         pbar.update()
 
