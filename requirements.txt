@@ -60,7 +60,7 @@ gitdb==4.0.10
     # via gitpython
 gitpython==3.1.37
     # via lyncs-setuptools
-hstrat @ git+https://github.com/mmore500/hstrat.git@9531324f3c2e1b9e7bd93c4a722bcfd6deacf794
+hstrat @ git+https://github.com/mmore500/hstrat.git@acea3ca28e7658a4e37cd59379466d08f13bdbc7
     # via
     #   -r requirements.in
     #   avidascripts
