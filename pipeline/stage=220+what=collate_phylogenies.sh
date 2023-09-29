@@ -219,11 +219,19 @@ def process_one_path(path: str) -> pd.DataFrame:
     for _key, group in stitched_df.groupby("role"):
       df = group.reset_index()
       assert hstrat_auxlib.alifestd_validate(df)
+      print(".", end="")
+      df = hstrat_auxlib.alifestd_to_working_format(df, mutate=True)
+      print(",", end="")
       df = hstrat_auxlib.alifestd_join_roots(df, mutate=True)
+      print("'", end="")
       df = hstrat_auxlib.alifestd_mark_ot_mrca_asexual(df, mutate=True)
+      print("*", end="")
       transformed.append(df)
 
-    complete_df = pd.concat(transformed, ignore_index=True)
+    print("agg")
+    complete_df = hstrat_auxlib.alfifestd_aggregate_phylogenies(
+      transformed, mutate=True
+    )
 
     for key, value in meta.items():
         complete_df[key] = value
