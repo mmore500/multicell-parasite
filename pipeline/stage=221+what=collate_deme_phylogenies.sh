@@ -187,7 +187,7 @@ def process_one_path(path: str) -> pd.DataFrame:
         mutate=True,
         num_updates_per_epoch=5000,
     )
-    phylo_df = make_deme_replication_phylogeny(data_df, mutate=True)
+    phylo_df = make_deme_replication_phylogeny(cat_df, mutate=True)
     phylo_df = hstrat_auxlib.alifestd_mark_ot_mrca_asexual(
         phylo_df, mutate=True
     )
