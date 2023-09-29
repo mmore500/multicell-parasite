@@ -218,11 +218,11 @@ def process_one_path(path: str) -> pd.DataFrame:
     transformed = []
     for _key, group in stitched_df.groupby("role"):
       df = group.reset_index()
+      df = hstrat_auxlib.alifestd_join_roots(df, mutate=True)
+      df = hstrat_auxlib.alifestd_topological_sort(df, mutate=True)
       df = hstrat_auxlib.alifestd_to_working_format(df, mutate=True)
       print(".")
       assert hstrat_auxlib.alifestd_validate(df)
-      print(",")
-      df = hstrat_auxlib.alifestd_join_roots(df, mutate=True)
       print("'")
       df = hstrat_auxlib.alifestd_mark_ot_mrca_asexual(df, mutate=True)
       print("*")
