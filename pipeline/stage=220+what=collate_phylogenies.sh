@@ -223,8 +223,11 @@ def process_one_path(path: str) -> pd.DataFrame:
       df = hstrat_auxlib.alifestd_to_working_format(df, mutate=True)
       print(".")
       assert hstrat_auxlib.alifestd_validate(df)
+      assert hstrat_auxlib.alifestd_is_topologically_sorted(df)
       print("'")
-      df = hstrat_auxlib.alifestd_mark_ot_mrca_asexual(df, mutate=True)
+      df = hstrat_auxlib.alifestd_mark_ot_mrca_asexual(
+        df, mutate=True, progress_wrap=tqdm
+      )
       print("*")
       transformed.append(df)
 
