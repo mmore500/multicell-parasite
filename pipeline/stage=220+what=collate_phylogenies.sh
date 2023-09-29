@@ -228,6 +228,12 @@ def process_one_path(path: str) -> pd.DataFrame:
       df = hstrat_auxlib.alifestd_mark_ot_mrca_asexual(
         df, mutate=True, progress_wrap=tqdm
       )
+      df = hstrat_auxlib.alifestd_coarsen_mask(
+        df,
+        df["Number of currently living organisms"].astype(bool),
+        mutate=True,
+        progress_wrap=tqdm,
+      )
       print("*")
       transformed.append(df)
 
