@@ -250,8 +250,8 @@ master_df = pd.concat(
 )
 print("master dataframe concatenated")
 
-outpath = "${BATCH_PATH}/what=sitched-phylos+ext=.csv"
-master_df.to_csv(outpath, index=False)
+outpath = "${BATCH_PATH}/what=sitched-phylos+ext=.csv.gz"
+master_df.to_csv(outpath, compression="gzip", index=False)
 print(f"{outpath} saved")
 EOF
 
