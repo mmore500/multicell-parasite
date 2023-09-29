@@ -121,6 +121,7 @@ import glob
 import multiprocessing as mp
 import re
 
+from hstrat import _auxiliary_lib as hstrat_auxlib
 from keyname import keyname as kn
 import numpy as np
 import pandas as pd
@@ -185,6 +186,10 @@ def process_one_path(path: str) -> pd.DataFrame:
         pop_dfs,
         mutate = True,
     )
+    stitched_df["origin_time"] = (
+      stitched_df["Update Born"]
+      + stitched_df["epoch"] * 5001
+    )
 
     # environment_content = get_named_environment_content("top25")
     # instset_content = get_named_instset_content("transsmt")
@@ -210,7 +215,15 @@ def process_one_path(path: str) -> pd.DataFrame:
     #     assessed_df, on=["role", "Genome Sequence"], how="left"
     # )
 
-    complete_df = stitched_df
+    transformed = []
+    for _key, group in stitched_df.groupby("role"):
+      df = group.reset_index()
+      assert hstrat_auxlib.alifestd_validate(df)
+      df = hstrat_auxlib.alifestd_join_roots(df, mutate=True)
+      df = hstrat_auxlib.alifestd_mark_ot_mrca_asexual(df, mutate=True)
+      transformed.append(df)
+
+    complete_df = pd.concat(transformed, ignore_index=True)
 
     for key, value in meta.items():
         complete_df[key] = value
