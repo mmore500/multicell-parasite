@@ -185,7 +185,7 @@ def process_one_path(path: str) -> pd.DataFrame:
     cat_df = stitch_deme_replication_dataframes(
         dat_dfs,
         mutate=True,
-        num_update_per_epoch=5000,
+        num_updates_per_epoch=5000,
     )
     phylo_df = make_deme_replication_phylogeny(data_df, mutate=True)
     phylo_df = hstrat_auxlib.alifestd_mark_ot_mrca_asexual(
