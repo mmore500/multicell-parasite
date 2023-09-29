@@ -1,6 +1,6 @@
 alphinity==0.1.4
 git+https://github.com/mmore500/AvidaScripts.git@v0.6.5#egg=AvidaScripts
-hstrat==1.6.1
+git+https://github.com/mmore500/hstrat.git@bb738b9227a62f1b02363185b9f3c3d8d82a77e4
 iterpop==0.4.1
 j2cli==0.3.10
 jinja2==3.0.0
