@@ -232,7 +232,7 @@ def process_one_path(path: str) -> pd.DataFrame:
       transformed.append(df)
 
     print("agg")
-    complete_df = hstrat_auxlib.alfifestd_aggregate_phylogenies(
+    complete_df = hstrat_auxlib.alifestd_aggregate_phylogenies(
       transformed, mutate=True
     )
 
