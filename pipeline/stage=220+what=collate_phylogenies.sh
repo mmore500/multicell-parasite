@@ -186,29 +186,31 @@ def process_one_path(path: str) -> pd.DataFrame:
         mutate = True,
     )
 
-    environment_content = get_named_environment_content("top25")
-    instset_content = get_named_instset_content("transsmt")
+    # environment_content = get_named_environment_content("top25")
+    # instset_content = get_named_instset_content("transsmt")
+    #
+    # para_assessed_df = assess_parasite_phenotypes(
+    #     set(
+    #       stitched_df.loc[stitched_df["role"] == "parasite", "Genome Sequence"],
+    #     ),
+    #     environment_content,
+    #     instset_content,
+    # )
+    # para_assessed_df["role"] = "parasite"
+    # host_assessed_df = assess_phenotypes(
+    #     set(stitched_df.loc[stitched_df["role"] == "host", "Genome Sequence"]),
+    #     environment_content,
+    #     instset_content,
+    # )
+    # host_assessed_df["role"] = "host"
+    #
+    # assessed_df = pd.concat([para_assessed_df, host_assessed_df], axis=0)
+    #
+    # complete_df = stitched_df.merge(
+    #     assessed_df, on=["role", "Genome Sequence"], how="left"
+    # )
 
-    para_assessed_df = assess_parasite_phenotypes(
-        set(
-          stitched_df.loc[stitched_df["role"] == "parasite", "Genome Sequence"],
-        ),
-        environment_content,
-        instset_content,
-    )
-    para_assessed_df["role"] = "parasite"
-    host_assessed_df = assess_phenotypes(
-        set(stitched_df.loc[stitched_df["role"] == "host", "Genome Sequence"]),
-        environment_content,
-        instset_content,
-    )
-    host_assessed_df["role"] = "host"
-
-    assessed_df = pd.concat([para_assessed_df, host_assessed_df], axis=0)
-
-    complete_df = stitched_df.merge(
-        assessed_df, on=["role", "Genome Sequence"], how="left"
-    )
+    complete_df = stitched_df
 
     for key, value in meta.items():
         complete_df[key] = value
