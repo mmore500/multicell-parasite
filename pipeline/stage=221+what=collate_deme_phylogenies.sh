@@ -234,7 +234,7 @@ master_df = pd.concat(
 print("master dataframe concatenated")
 
 outpath = "${BATCH_PATH}/what=collated-deme-phylos+ext=.csv.gz"
-master_df.to_csv(outpath, gzip=True, index=False)
+master_df.to_csv(outpath, compression="gzip", index=False)
 print(f"{outpath} saved")
 EOF
 
