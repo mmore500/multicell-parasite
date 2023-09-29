@@ -237,7 +237,7 @@ spop_paths = [*glob.glob(
 
 print(f"processing {len(spop_paths)} spop paths...")
 
-pool = mp.Pool()
+pool = mp.Pool(40)
 dataframes = []
 with tqdm(total=len(spop_paths)) as pbar:
     for result in pool.imap_unordered(try_process_one_path, provlog_paths):
