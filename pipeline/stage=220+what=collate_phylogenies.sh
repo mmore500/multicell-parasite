@@ -216,7 +216,9 @@ def process_one_path(path: str) -> pd.DataFrame:
     # )
 
     transformed = []
-    for _key, group in stitched_df.groupby("role"):
+    for role, group in stitched_df.groupby("role"):
+      if role == "host":
+        continue
       df = group.reset_index()
       df = hstrat_auxlib.alifestd_join_roots(df, mutate=True)
       df = hstrat_auxlib.alifestd_topological_sort(df, mutate=True)
