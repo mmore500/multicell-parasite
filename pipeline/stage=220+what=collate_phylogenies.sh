@@ -267,7 +267,7 @@ def process_one_path(path: str) -> pd.DataFrame:
     # Count duplicates and store the count in 'Num Cells' column
     num_cells = exploded.groupby(
       ["Deme ID", "id"],
-    ).transform(len)
+    )["id"].transform(len)  # need a column to do Series transform
     assert len(num_cells) == len(exploded), (
       f"{len(num_cells)=} {len(exploded)} {num_cells=} {exploded=}"
     )
