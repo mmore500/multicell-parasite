@@ -306,6 +306,13 @@ def process_one_path(path: str) -> pd.DataFrame:
     del deme_deduplicated
     assert id_deduplicated["id"].is_unique, 'id_deduplicated["id"].is_unique'
 
+    # need to update ancestor_list; if original deme was root,
+    # then id pointed to self but now it points to sibling deme
+    ancestor_list = hstrat_auxlib.alifestd_make_ancestor_list_col(
+        id_deduplicated["id"], id_deduplicated["ancestor_id"]
+    )
+    id_deduplicated["ancestor_list"] = ancestor_list
+
     df = id_deduplicated
     del id_deduplicated
     assert hstrat_auxlib.alifestd_validate(df), 'hstrat_auxlib.alifestd_validate(df)'
