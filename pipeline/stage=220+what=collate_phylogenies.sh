@@ -204,8 +204,8 @@ def process_one_path(path: str) -> pd.DataFrame:
     # there appear to be chronological inconsistencies w/ raw Avida data
     # so, granularize origin_time to epoch
     stitched_df["origin_time"] = stitched_df["epoch"]
-    assert hstrat_auxlib.alifestd_validate(stitched_df)
-    assert hstrat_auxlib.alifestd_is_chronologically_ordered(stitched_df)
+    assert hstrat_auxlib.alifestd_validate(stitched_df), 'hstrat_auxlib.alifestd_validate(stitched_df)'
+    assert hstrat_auxlib.alifestd_is_chronologically_ordered(stitched_df), 'hstrat_auxlib.alifestd_is_chronologically_ordered(stitched_df)'
 
     # environment_content = get_named_environment_content("top25")
     # instset_content = get_named_instset_content("transsmt")
@@ -236,42 +236,43 @@ def process_one_path(path: str) -> pd.DataFrame:
       if role == "host":
         continue
       df = group.reset_index()
-      assert hstrat_auxlib.alifestd_validate(df)
-      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df)
+      assert hstrat_auxlib.alifestd_validate(df), 'hstrat_auxlib.alifestd_validate(df)'
+      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df), 'hstrat_auxlib.alifestd_is_chronologically_ordered(df)'
       df = hstrat_auxlib.alifestd_join_roots(df, mutate=True)
-      assert hstrat_auxlib.alifestd_validate(df)
-      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df)
+      assert hstrat_auxlib.alifestd_validate(df), 'hstrat_auxlib.alifestd_validate(df)'
+      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df), 'hstrat_auxlib.alifestd_is_chronologically_ordered(df)'
       df = hstrat_auxlib.alifestd_topological_sort(df, mutate=True)
-      assert hstrat_auxlib.alifestd_validate(df)
-      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df)
+      assert hstrat_auxlib.alifestd_validate(df), 'hstrat_auxlib.alifestd_validate(df)'
+      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df), 'hstrat_auxlib.alifestd_is_chronologically_ordered(df)'
       df = hstrat_auxlib.alifestd_to_working_format(df, mutate=True)
-      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df)
+      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df), 'hstrat_auxlib.alifestd_is_chronologically_ordered(df)'
       df = hstrat_auxlib.alifestd_mark_ot_mrca_asexual(
         df, mutate=True, progress_wrap=tqdm
       )
-      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df)
+      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df), 'hstrat_auxlib.alifestd_is_chronologically_ordered(df)'
       df = hstrat_auxlib.alifestd_coarsen_mask(
         df,
         df["Number of currently living organisms"].astype(bool),
         mutate=True,
         progress_wrap=tqdm,
       )
-      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df)
+      assert hstrat_auxlib.alifestd_is_chronologically_ordered(df), 'hstrat_auxlib.alifestd_is_chronologically_ordered(df)'
       transformed.append(df)
 
     print("agg")
     df = hstrat_auxlib.alifestd_aggregate_phylogenies(
       transformed, mutate=True
     )
-    assert hstrat_auxlib.alifestd_validate(df)
-    assert hstrat_auxlib.alifestd_is_chronologically_ordered(df)
+    assert df["id"].is_unique, 'df["id"].is_unique'
+    assert hstrat_auxlib.alifestd_validate(df), 'hstrat_auxlib.alifestd_validate(df)'
+    assert hstrat_auxlib.alifestd_is_chronologically_ordered(df), 'hstrat_auxlib.alifestd_is_chronologically_ordered(df)'
     del transformed
     del stitched_df
 
     # coarsen to demes instead of cells
     # Explode the "Occupied Cell IDs" column
-    df["Occupied Cell IDs"] = df['Occupied Cell IDs'].str.split(',')
-    exploded = df.explode('Occupied Cell IDs')
+    df["Occupied Cell IDs"] = df["Occupied Cell IDs"].str.split(",")
+    exploded = df.explode("Occupied Cell IDs")
 
     # Convert 'Occupied Cell IDs' to int and calculate the 'Deme ID'
     deme_size = 625
@@ -284,7 +285,7 @@ def process_one_path(path: str) -> pd.DataFrame:
     num_cells = exploded.groupby(
       ["Deme ID", "id"],
     )["id"].transform(len)  # need a column to do Series transform
-    assert len(num_cells) == len(exploded)
+    assert len(num_cells) == len(exploded), 'len(num_cells) == len(exploded)'
     exploded["Num Cells"] = num_cells
 
     # Deduplicate based on 'Deme ID'
@@ -292,7 +293,9 @@ def process_one_path(path: str) -> pd.DataFrame:
       subset=["Deme ID", "id"],
       keep="first",
     )
+    del exploded
 
+    # arbitrarily resolve taxa split into different demes
     siblings = deme_deduplicated.duplicated("id", keep="first")
     num_siblings = siblings.sum()
     deme_deduplicated.loc[siblings, "id"] = (
@@ -301,12 +304,12 @@ def process_one_path(path: str) -> pd.DataFrame:
     )
     id_deduplicated = deme_deduplicated
     del deme_deduplicated
+    assert id_deduplicated["id"].is_unique, 'id_deduplicated["id"].is_unique'
 
-    del exploded
     df = id_deduplicated
     del id_deduplicated
-    assert hstrat_auxlib.alifestd_validate(df)
-    assert hstrat_auxlib.alifestd_is_chronologically_ordered(df)
+    assert hstrat_auxlib.alifestd_validate(df), 'hstrat_auxlib.alifestd_validate(df)'
+    assert hstrat_auxlib.alifestd_is_chronologically_ordered(df), 'hstrat_auxlib.alifestd_is_chronologically_ordered(df)'
     for key, value in meta.items():
         df[key] = value
 
