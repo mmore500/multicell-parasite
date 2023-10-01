@@ -288,16 +288,25 @@ def process_one_path(path: str) -> pd.DataFrame:
     exploded["Num Cells"] = num_cells
 
     # Deduplicate based on 'Deme ID'
-    deduplicated = exploded.drop_duplicates(
+    deme_deduplicated = exploded.drop_duplicates(
       subset=["Deme ID", "id"],
       keep="first",
     )
 
+    siblings = deme_deduplicated.duplicated("id", keep="first")
+    num_siblings = siblings.sum()
+    deme_deduplicated.loc[siblings, "id"] = (
+      np.arange(num_siblings)
+      + deme_deduplicated["id"].max() + 1  # ensure no clash with existing ids
+    )
+    id_deduplicated = deme_deduplicated
+    del deme_deduplicated
+
     del exploded
-    df = deduplicated
+    df = id_deduplicated
+    del id_deduplicated
     assert hstrat_auxlib.alifestd_validate(df)
     assert hstrat_auxlib.alifestd_is_chronologically_ordered(df)
-    del deduplicated
     for key, value in meta.items():
         df[key] = value
 
