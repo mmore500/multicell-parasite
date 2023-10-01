@@ -185,6 +185,17 @@ def process_one_path(path: str) -> pd.DataFrame:
     stitched_df = stitch_population_phylogenies(
         pop_dfs,
         mutate = True,
+    ).drop(
+      [
+        "Gestation (CPU) Cycle Offsets",
+        "Lineage Label",
+        "Genome Sequence",
+        "Inst Set Name",
+        "Source Args",
+        "index",
+      ],
+      axis=1,
+      errors="ignore",
     )
     stitched_df["origin_time"] = (
       stitched_df["Update Born"]
@@ -223,10 +234,6 @@ def process_one_path(path: str) -> pd.DataFrame:
       df = hstrat_auxlib.alifestd_join_roots(df, mutate=True)
       df = hstrat_auxlib.alifestd_topological_sort(df, mutate=True)
       df = hstrat_auxlib.alifestd_to_working_format(df, mutate=True)
-      print(".")
-      assert hstrat_auxlib.alifestd_validate(df)
-      assert hstrat_auxlib.alifestd_is_topologically_sorted(df)
-      print("'")
       df = hstrat_auxlib.alifestd_mark_ot_mrca_asexual(
         df, mutate=True, progress_wrap=tqdm
       )
@@ -236,18 +243,45 @@ def process_one_path(path: str) -> pd.DataFrame:
         mutate=True,
         progress_wrap=tqdm,
       )
-      print("*")
       transformed.append(df)
 
     print("agg")
-    complete_df = hstrat_auxlib.alifestd_aggregate_phylogenies(
+    df = hstrat_auxlib.alifestd_aggregate_phylogenies(
       transformed, mutate=True
     )
+    del transformed
+    del stitched_df
 
+    # coarsen to demes instead of cells
+    # Explode the "Occupied Cell IDs" column
+    df["Occupied Cell IDs"] = df['Occupied Cell IDs'].str.split(',')
+    exploded = df.explode('Occupied Cell IDs')
+
+    # Convert 'Occupied Cell IDs' to int and calculate the 'Deme ID'
+    deme_size = 625
+    exploded["Occupied Cell IDs"] = exploded["Occupied Cell IDs"].astype("int")
+    exploded["Deme ID"] = (
+      exploded["Occupied Cell IDs"] // deme_size
+    ).astype("int")
+
+    # Count duplicates and store the count in 'Num Cells' column
+    exploded["Num Cells"] = exploded.groupby(
+      ["Deme ID", "id"],
+    ).transform(len)
+
+    # Deduplicate based on 'Deme ID'
+    deduplicated = exploded.drop_duplicates(
+      subset=["Deme ID", "id"],
+      keep="first",
+    )
+
+    del exploded
+    df = deduplicated
+    del deduplicated
     for key, value in meta.items():
-        complete_df[key] = value
+        df[key] = value
 
-    return complete_df
+    return df
 
 
 def try_process_one_path(path: str) -> pd.DataFrame:
@@ -285,9 +319,15 @@ master_df = pd.concat(
 )
 print("master dataframe concatenated")
 
-outpath = "${BATCH_PATH}/what=sitched-phylos+ext=.csv.gz"
-master_df.to_csv(outpath, compression="gzip", index=False)
-print(f"{outpath} saved")
+for treat, group in tqdm(master_df.groupby("treatment")):
+    outpath = f"${BATCH_PATH}/a=phylogeny+what=concat+treatment={treat}+ext=.pqt"
+    group.reset_index().to_parquet(
+        outpath,
+        compression="snappy",
+        index=False,
+    )
+    print(f"{outpath} saved")
+
 EOF
 
 echo "fin"
