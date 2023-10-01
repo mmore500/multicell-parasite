@@ -176,7 +176,7 @@ def process_one_path(path: str) -> pd.DataFrame:
     dat_glob = f"{path}/alph*epoch*/latest/data/deme_replication.dat"
     dat_paths = [*glob.glob(dat_glob)]
     dat_paths.sort(
-        key=lambda p: kn.unpack(p.replace("/", "+"))["epoch"],
+        key=lambda p: int(kn.unpack(p.replace("/", "+"))["epoch"]),
     )
 
     dat_dfs = map(load_deme_replication_dataframe, dat_paths)
