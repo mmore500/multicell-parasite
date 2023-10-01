@@ -265,9 +265,13 @@ def process_one_path(path: str) -> pd.DataFrame:
     ).astype("int")
 
     # Count duplicates and store the count in 'Num Cells' column
-    exploded["Num Cells"] = exploded.groupby(
+    num_cells = exploded.groupby(
       ["Deme ID", "id"],
     ).transform(len)
+    assert len(num_cells) == len(exploded), (
+      f"{len(num_cells)=} {len(exploded)} {num_cells=} {exploded=}"
+    )
+    exploded["Num Cells"] = num_cells
 
     # Deduplicate based on 'Deme ID'
     deduplicated = exploded.drop_duplicates(
