@@ -197,10 +197,13 @@ def process_one_path(path: str) -> pd.DataFrame:
       axis=1,
       errors="ignore",
     )
-    stitched_df["origin_time"] = (
-      stitched_df["Update Born"]
-      + stitched_df["epoch"] * 5001
-    )
+    # stitched_df["origin_time"] = (
+    #   stitched_df["Update Born"]
+    #   + stitched_df["epoch"] * 5001
+    # )
+    # there appear to be chronological inconsistencies w/ raw Avida data
+    # so, granularize origin_time to epoch
+    stitched_df["origin_time"] = stitched_df["epoch"]
     assert hstrat_auxlib.alifestd_validate(stitched_df)
     assert hstrat_auxlib.alifestd_is_chronologically_ordered(stitched_df)
 
