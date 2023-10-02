@@ -179,7 +179,7 @@ def process_one_path(path: str) -> pd.DataFrame:
     ]
     host_paths = [
         path
-        for path in glob.glob(f"{path}/alph*epoch*/latest/data/grid_task_hostsite*.dat")
+        for path in glob.glob(f"{path}/alph*epoch*/latest/data/grid_task_hosts*.dat")
         if int(kn.unpack(path.replace("/", "+"))["epoch"]) < 95
     ]
 
