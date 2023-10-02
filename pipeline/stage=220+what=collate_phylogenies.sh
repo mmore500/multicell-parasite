@@ -363,6 +363,7 @@ for treat, group in tqdm(master_df.groupby("treatment")):
     group.reset_index().to_parquet(
         outpath,
         compression="snappy",
+        engine="pyarrow",  # fastparquet fails with overflowerror
         index=False,
     )
     print(f"{outpath} saved")

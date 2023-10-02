@@ -144,6 +144,7 @@ numpy==1.21.6
     #   numexpr
     #   pandas
     #   pandera
+    #   pyarrow
     #   scipy
     #   seaborn
     #   tables
@@ -183,6 +184,8 @@ py==1.11.0
     # via retry
 py-cpuinfo==9.0.0
     # via tables
+pyarrow==12.0.0
+    # via -r requirements.in
 pydantic==2.4.2
     # via pandera
 pydantic-core==2.10.1
