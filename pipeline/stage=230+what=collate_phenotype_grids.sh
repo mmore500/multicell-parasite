@@ -265,15 +265,14 @@ master_df = pd.concat(
 )
 print("master dataframe concatenated")
 
-for treat, group in tqdm(master_df.groupby("treatment")):
-    outpath = f"${BATCH_PATH}/a=grid_task+what=concat+treatment={treat}+ext=.pqt"
-    group.reset_index().to_parquet(
-        outpath,
-        compression="snappy",
-        engine="pyarrow",  # fastparquet fails with overflowerror
-        index=False,
-    )
-    print(f"{outpath} saved")
+outpath = f"${BATCH_PATH}/a=grid_task+what=concat+ext=.pqt"
+master_df.to_parquet(
+    outpath,
+    compression="snappy",
+    engine="pyarrow",  # fastparquet fails with overflowerror
+    index=False,
+)
+print(f"{outpath} saved")
 
 EOF
 
