@@ -216,7 +216,7 @@ def process_one_path(path: str) -> pd.DataFrame:
         ).reset_index()
 
         agg["epoch"] = int(kn.unpack(path.replace("/", "+"))["epoch"])
-        agg["role"] = "parasite"
+        agg["role"] = role
         dfs.append(agg)
 
     df = pd.concat(dfs, ignore_index=True)
