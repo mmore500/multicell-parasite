@@ -200,11 +200,22 @@ def process_one_path(path: str) -> pd.DataFrame:
         df = load_grid_task_dataframe(path, num_tasks=num_tasks)
         num_cells_per_deme = 625
         df["Deme ID"] = df["Site"] // num_cells_per_deme
+        for alias in [
+          "Sampled Cell Num Traits",
+          "Median Cell Num Traits",
+          "Min Cell Num Traits",
+          "Max Cell Num Traits",
+        ]:
+          df[alias] = df["Num Traits"]
 
         agg_funcs = {
             "Alive": "sum",
             "Empty": "sum",
             "Num Traits": "mean",
+            "Sampled Cell Num Traits": "first",
+            "Median Cell Num Traits": "median",
+            "Min Cell Num Traits": "min",
+            "Max Cell Num Traits": "max",
         }
         for i in range(num_tasks):
             agg_funcs[f"Trait {i}"] = "sum"
