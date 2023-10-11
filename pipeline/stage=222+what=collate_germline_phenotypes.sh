@@ -206,7 +206,10 @@ def process_one_path(path: str) -> pd.DataFrame:
     for key, value in meta.items():
         res[key] = value
 
-    return res.drop(columns=["Genome Sequence"])  # drop to save space
+    assert "Genome Sequence" in res.columns, (
+      res.columns, df.columns, phen_df.columns
+    )
+    return res.drop(columns="Genome Sequence")  # drop to save space
 
 
 def try_process_one_path(path: str) -> pd.DataFrame:
