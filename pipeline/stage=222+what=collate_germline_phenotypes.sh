@@ -200,7 +200,7 @@ def process_one_path(path: str) -> pd.DataFrame:
     res = pd.concat(
       [df, phen_df.drop(columns=df.columns, errors="ignore")],
       axis=1,
-      ignore_index=True.
+      ignore_index=True,
     )
 
     for key, value in meta.items():
