@@ -246,7 +246,7 @@ master_df = pd.concat(
 )
 print("master dataframe concatenated")
 
-outpath = f"${BATCH_PATH}/a=grid_task+what=concat+ext=.pqt"
+outpath = f"${BATCH_PATH}/a=germline_phenotype+what=concat+ext=.pqt"
 master_df.to_parquet(
     outpath,
     compression="snappy",
