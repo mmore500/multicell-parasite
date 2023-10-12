@@ -195,7 +195,8 @@ def process_one_path(path: str) -> pd.DataFrame:
         df["Genome Sequence"],
         get_named_environment_content("top25"),
         get_named_instset_content("transsmt"),
-    )
+    ).reset_index(drop=True)
+    assert len(df) == len(phen_df)
 
     res = pd.concat(
       [df, phen_df.drop(columns=df.columns, errors="ignore")],
