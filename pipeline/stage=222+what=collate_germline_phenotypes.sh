@@ -135,7 +135,7 @@ from AvidaScripts.GenericScripts.GenomeManipulation import (
     get_named_instset_content,
 )
 from AvidaScripts.GenericScripts.PhenotypeAssessment import (
-    assess_phenotypes,
+    assess_host_phenotypes,
     assess_parasite_phenotypes,
     get_named_environment_content,
     load_grid_task_dataframe,
@@ -191,7 +191,7 @@ def process_one_path(path: str) -> pd.DataFrame:
 
     df = pd.concat(dfs, ignore_index=True)
 
-    phen_df = assess_phenotypes(
+    phen_df = assess_host_phenotypes(
         df["Genome Sequence"],
         get_named_environment_content("top25"),
         get_named_instset_content("transsmt"),
