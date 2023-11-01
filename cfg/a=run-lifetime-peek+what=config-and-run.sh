@@ -54,16 +54,16 @@ echo "EPOCH_ ${EPOCH_}"
 export REPLICATE="${REPLICATE:-0}"
 echo "REPLICATE ${REPLICATE}"
 
-export WORLD_X="${WORLD_X:-40}"
+export WORLD_X="${WORLD_X:-30}"
 echo "WORLD_X ${WORLD_X}"
 
-export WORLD_Y="${WORLD_Y:-120}"
+export WORLD_Y="${WORLD_Y:-180}"
 echo "WORLD_Y ${WORLD_Y}"
 
 export WORLD_SIZE="$((WORLD_X * WORLD_Y))"
 echo "WORLD_SIZE ${WORLD_SIZE}"
 
-export NUM_DEMES="${NUM_DEMES:-12}"
+export NUM_DEMES="${NUM_DEMES:-6}"
 echo "NUM_DEMES ${NUM_DEMES}"
 
 export NUM_CELLS_PER_DEME="$((WORLD_SIZE / NUM_DEMES))"
@@ -209,7 +209,7 @@ DEMES_MIGRATION_METHOD 4  # necessary for parasite migration
 DEMES_PARASITE_MIGRATION_RATE 0.0
 
 # Probability of an offspring being born in a different deme.
-DEMES_MIGRATION_RATE 0.02
+DEMES_MIGRATION_RATE 0.002
 
 MIGRATION_FILE migration.mat
 
