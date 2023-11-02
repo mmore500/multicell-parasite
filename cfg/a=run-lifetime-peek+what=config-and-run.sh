@@ -54,16 +54,16 @@ echo "EPOCH_ ${EPOCH_}"
 export REPLICATE="${REPLICATE:-0}"
 echo "REPLICATE ${REPLICATE}"
 
-export WORLD_X="${WORLD_X:-15}"
+export WORLD_X="${WORLD_X:-25}"
 echo "WORLD_X ${WORLD_X}"
 
-export WORLD_Y="${WORLD_Y:-60}"
+export WORLD_Y="${WORLD_Y:-200}"
 echo "WORLD_Y ${WORLD_Y}"
 
 export WORLD_SIZE="$((WORLD_X * WORLD_Y))"
 echo "WORLD_SIZE ${WORLD_SIZE}"
 
-export NUM_DEMES="${NUM_DEMES:-4}"
+export NUM_DEMES="${NUM_DEMES:-8}"
 echo "NUM_DEMES ${NUM_DEMES}"
 
 export NUM_CELLS_PER_DEME="$((WORLD_SIZE / NUM_DEMES))"
@@ -206,7 +206,7 @@ DEMES_MIGRATION_METHOD 4  # necessary for parasite migration
 
 # Probability of a parasite migrating to a different deme
 # NOTE: only works with DEMES_MIGRATION_METHOD 4
-DEMES_PARASITE_MIGRATION_RATE 0.05
+DEMES_PARASITE_MIGRATION_RATE 0.0
 
 # Probability of an offspring being born in a different deme.
 DEMES_MIGRATION_RATE 0.0
@@ -448,7 +448,7 @@ $(
       host_org_seq="$(echo ${HOST_SEQS} | cut -d " " -f "$((host_org_idx + 1))")"
       smear_delay="$(( (NUM_UPDATES_INTRO_SMEAR * deme) / NUM_DEMES))"
       target_cell_idx="$((deme * NUM_CELLS_PER_DEME))"
-      echo "u 0 InjectSequence ${host_org_seq} ${target_cell_idx}"
+      echo "u ${smear_delay} InjectSequence ${host_org_seq} ${target_cell_idx}"
     done
   fi
 )
@@ -456,9 +456,14 @@ $(
 # Let the hosts grow a bit, then inject parasites
 $(
   if [ "${EPOCH_}" -eq 0 ]; then
-    for pos in $(seq 0 4 "$(( WORLD_SIZE - 1 ))"); do
-      smear_delay="$(( (NUM_UPDATES_INTRO_SMEAR * pos) / (WORLD_SIZE * 2)  ))"
-      echo "u $(( 1000 + smear_delay )) InjectParasite parasite-smt.org ABB ${pos}"
+    # for pos in $(seq 0 4 "$(( WORLD_SIZE - 1 ))"); do
+    #   smear_delay="$(( (NUM_UPDATES_INTRO_SMEAR * pos) / (WORLD_SIZE * 2)  ))"
+    #   echo "u $(( 1000 + smear_delay )) InjectParasite parasite-smt.org ABB ${pos}"
+    # done
+    for update in $(seq 999 100 40000); do
+      for pos in $(seq 1 ${NUM_CELLS_PER_DEME} ${WORLD_SIZE}); do
+          echo "u ${update} InjectParasite parasite-smt.org ABB ${pos} $((pos + 1)) 1 1"
+      done
     done
   fi
 )
@@ -481,10 +486,10 @@ u 0:100 PrintAverageData       # Save info about the average genotypes
 u 0:100 PrintCountData         # Count organisms, genotypes, species, etc.
 u 0:100 PrintTimeData          # Track time conversion (generations, etc.)
 u 0:100 PrintMigrationData
-u 10000 SavePopulation
-u 10000 SaveGermlines
+u 40000 SavePopulation
+u 40000 SaveGermlines
 
-u 10000 Exit
+u 40000 Exit
 EOF
 #______________________________________________________________________________
 

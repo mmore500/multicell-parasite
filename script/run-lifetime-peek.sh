@@ -14,7 +14,7 @@ export REPLICATE=0
 
 export RANDOM_SEED=1
 
-export NUM_UPDATES_INTRO_SMEAR=100
+export NUM_UPDATES_INTRO_SMEAR=1000
 
 export TREATMENT="ecohost-monohost"
 
@@ -66,7 +66,7 @@ def process_one_path(path: str) -> pd.DataFrame:
                 "row": index,
                 "col": col,
                 "site": len(records),
-                "deme": len(records) // 225,
+                "deme": len(records) // 625,
             }
             task_data = {
                 f"task {task}": int(
