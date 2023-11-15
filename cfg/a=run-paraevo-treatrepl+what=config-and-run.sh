@@ -211,11 +211,11 @@ DEMES_PARASITE_MIGRATION_RATE 0.002
 # How should a target cell be chosen in the migrated-to deme?
 # 0 = Select a cell randomly, if it is not occupied infection fails
 # 1 = Select an occupied cell randomly
-DEMES_PARASITE_MIGRATION_TARGET_SELECTION_METHOD 1
+DEMES_PARASITE_MIGRATION_TARGET_SELECTION_METHOD 0
 
 # Above what parasite memory score should hosts be protected from incoming
 # parasite migration?
-DEMES_PARASITE_MIGRATION_MEMORY_SCORE_PROTECTIVE_THRESHOLD 1.0
+DEMES_PARASITE_MIGRATION_MEMORY_SCORE_PROTECTIVE_THRESHOLD 0.0000000001
 
 # Probability of an offspring being born in a different deme.
 DEMES_MIGRATION_RATE 0.0
@@ -478,12 +478,12 @@ $(
 
 $(
   if [ "${EPOCH_}" -ne 0 ]; then
-    echo "u:100 KillDemesHighestParasiteLoad 0.015"
-    echo "u:100 ReplicateDemesHighestBirthCount 0.02"
+    echo "u:100 KillDemesHighestParasiteLoad 0.02"
+    echo "u:100 ReplicateDemesHighestBirthCount 0.03"
   fi
 )
 
-u 0:20 UpdateDemeParasiteMemoryScores 0.97
+u 0:20 UpdateDemeParasiteMemoryScores 1.0
 
 u 0:100 PrintParasiteData ParasiteData.dat
 u 0:100 PrintCountData
