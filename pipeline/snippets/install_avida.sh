@@ -35,6 +35,8 @@ while ! [ -e "${TMPDIR}/${AVIDA_REVISION}-${RUNMODE}" ]; do
 
 done
 
+module load binutils/2.39 || :
+
 export AVIDA="${TMPDIR}/${AVIDA_REVISION}-${RUNMODE}/cbuild/work/avida"
 "${AVIDA}" -version
 
