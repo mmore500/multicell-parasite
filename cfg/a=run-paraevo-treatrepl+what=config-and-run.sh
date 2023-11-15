@@ -155,7 +155,7 @@ RANDOM_SEED ${RANDOM_SEED}
 DEMES_SEED_METHOD 0  # this doesn't matter for DEMES_USE_GERMLINE 1
 
 # Number of organisms in a deme to trigger its replication (0 = OFF).
-DEMES_REPLICATE_ORGS ${NUM_CELLS_PER_DEME}
+DEMES_REPLICATE_ORGS 0
 
 # Deme divide method.
 # Only works with DEMES_SEED_METHOD 1
@@ -207,6 +207,15 @@ DEMES_MIGRATION_METHOD 4  # necessary for parasite migration
 # Probability of a parasite migrating to a different deme
 # NOTE: only works with DEMES_MIGRATION_METHOD 4
 DEMES_PARASITE_MIGRATION_RATE 0.002
+
+# How should a target cell be chosen in the migrated-to deme?
+# 0 = Select a cell randomly, if it is not occupied infection fails
+# 1 = Select an occupied cell randomly
+DEMES_PARASITE_MIGRATION_TARGET_SELECTION_METHOD 1
+
+# Above what parasite memory score should hosts be protected from incoming
+# parasite migration?
+DEMES_PARASITE_MIGRATION_MEMORY_SCORE_PROTECTIVE_THRESHOLD 1.0
 
 # Probability of an offspring being born in a different deme.
 DEMES_MIGRATION_RATE 0.0
@@ -440,6 +449,8 @@ $(
   if [ "${EPOCH_}" -ne 0 ]; then
     echo "i LoadPopulation host-parasite-smt.spop"
     echo "i LoadGermlines host-smt.sgerm 1"
+    echo "i LoadDemeBirthCounts host-smt.sgerm 1"
+    echo "i LoadParasiteMemoryScores host-smt.sgerm 1"
   else
     echo "i InjectSequence ${HOST_SEQS%% *} 0"
 
@@ -465,6 +476,15 @@ $(
   fi
 )
 
+$(
+  if [ "${EPOCH_}" -ne 0 ]; then
+    u:100 KillDemesHighestParasiteLoad 0.015
+    u:100 ReplicateDemesHighestBirthCount 0.02
+  fi
+)
+
+u0:20 UpdateDemeParasiteMemoryScores 0.97
+
 u 0:100 PrintParasiteData ParasiteData.dat
 u 0:100 PrintCountData
 u 0:100 PrintDemeOrgGermlineSequestration
@@ -487,7 +507,7 @@ u 5000 PrintCountData         # Count organisms, genotypes, species, etc.
 u 5000 PrintTimeData          # Track time conversion (generations, etc.)
 u 5000 PrintMigrationData
 u 5000 SavePopulation
-u 5000 SaveGermlines
+u 5000 SaveGermlines filename=detailgermlines:birthcounts=1:parasitememoryscores=1
 
 u 5000 Exit
 EOF
