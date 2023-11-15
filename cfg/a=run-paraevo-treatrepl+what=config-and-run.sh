@@ -478,12 +478,12 @@ $(
 
 $(
   if [ "${EPOCH_}" -ne 0 ]; then
-    u:100 KillDemesHighestParasiteLoad 0.015
-    u:100 ReplicateDemesHighestBirthCount 0.02
+    echo "u:100 KillDemesHighestParasiteLoad 0.015"
+    echo "u:100 ReplicateDemesHighestBirthCount 0.02"
   fi
 )
 
-u0:20 UpdateDemeParasiteMemoryScores 0.97
+u 0:20 UpdateDemeParasiteMemoryScores 0.97
 
 u 0:100 PrintParasiteData ParasiteData.dat
 u 0:100 PrintCountData
