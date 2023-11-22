@@ -336,7 +336,7 @@ INJECT_METHOD 1
 INFECTION_MECHANISM 1
 
 # If set to 1, at least one reaction is required for a successful divide
-REQUIRE_SINGLE_REACTION 3
+REQUIRE_SINGLE_REACTION 2
 
 # Infection causes host steralization and takes all cpu cycles
 # (setting this to 1 will override inject_virulence)
