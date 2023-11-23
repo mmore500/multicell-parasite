@@ -215,7 +215,7 @@ DEMES_PARASITE_MIGRATION_TARGET_SELECTION_METHOD 0
 
 # Above what parasite memory score should hosts be protected from incoming
 # parasite migration?
-DEMES_PARASITE_MIGRATION_MEMORY_SCORE_PROTECTIVE_THRESHOLD 0.0
+DEMES_PARASITE_MIGRATION_MEMORY_SCORE_PROTECTIVE_THRESHOLD 1000000000000.0
 
 # Probability of an offspring being born in a different deme.
 DEMES_MIGRATION_RATE 0.0
