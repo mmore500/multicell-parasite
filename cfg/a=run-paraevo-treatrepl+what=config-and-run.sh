@@ -301,7 +301,7 @@ DIVIDE_DEL_PROB 0
 # Substitution rate (per site, applied on inject)
 INJECT_MUT_PROB 0.005625
 # Insertion rate (per site, applied on inject)
-INJECT_INS_PROB 0.0
+INJECT_INS_PROB 0.005625
 # Deletion rate (per site, applied on inject)
 INJECT_DEL_PROB 0.0
 
@@ -317,7 +317,7 @@ GERMLINE_DEL_MUT 0.0
 # Should genotypes that cannot replicate perfectly not be allowed to replicate?
 STERILIZE_UNSTABLE 1
 
-GENOME_SIZE_RECOVERY 3  # sterilize too-small or too-large genomes
+GENOME_SIZE_RECOVERY 0  # don't sterilize too-small or too-large genomes
 
 
 # PARASITE CONFIGURATION
