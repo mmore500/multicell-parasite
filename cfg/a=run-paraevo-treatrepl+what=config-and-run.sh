@@ -193,9 +193,6 @@ DEMES_REPLICATE_BIRTHS 0
 # used with birth-count replication
 DEMES_MAX_BIRTHS 0
 
-# Give empty demes preference as targets of deme replication?
-DEMES_PREFER_EMPTY 1
-
 # Which demes can an offspring land in when it migrates?
 # 0 = Any other deme
 # 1 = Eight neighboring demes
