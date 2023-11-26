@@ -246,7 +246,7 @@ LOG_INJECT 1
 # 13 = Kill parent and offpsring (for behavioral trials)
 BIRTH_METHOD 6 # random within deme
 # Overide BIRTH_METHOD to preferentially choose empty cells for offsping?
-PREFER_EMPTY 0
+PREFER_EMPTY 1
 
 # Disable age death
 # When hosts are reloaded from file, a large number of them die synchronously
@@ -479,7 +479,7 @@ $(
 $(
   if [ "${EPOCH_}" -ne 0 ]; then
     # echo "u 0:100 KillDemesHighestParasiteLoad 0.02"
-    echo "u 0:1000 ReplicateDemesHighestBirthCount 0.04"
+    echo "u 0:500 ReplicateDemesHighestBirthCount 0.05"
   fi
 )
 
