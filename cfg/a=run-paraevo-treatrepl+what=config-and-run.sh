@@ -248,13 +248,13 @@ BIRTH_METHOD 6 # random within deme
 # Overide BIRTH_METHOD to preferentially choose empty cells for offsping?
 PREFER_EMPTY 1
 
-# Disable age death
+# Enable age death
 # When hosts are reloaded from file, a large number of them die synchronously
 # a few hundred updates into the simulation if age death is enabled.
 DEATH_METHOD 2
 # When should death by old age occur?
 # When executed genome_length * AGE_LIMIT (+dev) instructions
-# AGE_LIMIT 20
+AGE_LIMIT 50
 
 
 
