@@ -479,7 +479,7 @@ $(
 $(
   if [ "${EPOCH_}" -ne 0 ]; then
     # echo "u 0:100 KillDemesHighestParasiteLoad 0.02"
-    echo "u 0:500 ReplicateDemesHighestFecundity 0.02 1"
+    echo "u 0:100 ReplicateDemesHighestFecundity 0.02 1"
   fi
 )
 
