@@ -333,10 +333,10 @@ INJECT_METHOD 1
 # 1: Infection succeeds if parasite matches at least one host task
 # 2: Infection succeeds if parasite does NOT match at least one task
 # 3: Parasite tasks must match host tasks exactly (Matching Alleles)
-INFECTION_MECHANISM 1
+INFECTION_MECHANISM 2
 
 # If set to 1, at least one reaction is required for a successful divide
-REQUIRE_SINGLE_REACTION 3
+REQUIRE_SINGLE_REACTION 1
 
 # Infection causes host steralization and takes all cpu cycles
 # (setting this to 1 will override inject_virulence)
