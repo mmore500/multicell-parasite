@@ -1,0 +1,70 @@
+name: multicell-parasite continuous integration
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches:
+      - '**'
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+jobs:
+
+  docker-build:
+    name: Docker Image Build
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build and Push to GitHub Container Registry
+        uses: docker/build-push-action@v1
+        with:
+          push: true
+          tags: "latest"
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          repository: mmore500/multicell-parasite
+          registry: ghcr.io
+          add_git_labels: true
+
+  latex:
+    name: Latex Build
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/mmore500/teximage:sha-77b8179
+      # github actions requires root to access mounted volumes
+      options: --user root
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - run: make -C tex/
+      - run: 'cat tex/*.log || :'
+      - name: Upload output as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: manuscript
+          path: tex/${{ github.event.repository.name }}-draft.pdf
+
+  binder:
+    name: Notebooks
+    runs-on: ubuntu-latest
+    needs:
+      - docker-build
+    container:
+      image: ghcr.io/mmore500/multicell-parasite:GITHUB_ACTION_${{ github.run_number }}
+      # github actions requires root to access mounted volumes
+      options: --user root
+    steps:
+      # Adapted from https://askubuntu.com/a/524368
+      - run: cd /opt/multicell-parasite/binder && ./execute_notebooks.sh
+      # adapted from https://unix.stackexchange.com/a/545630
+      - run: find -type f -name "*.pdf" -exec bash -c 'gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -dNOPAUSE -dBATCH -dQUIET -sOutputFile="new.pdf" "{}"; rm "{}"; mv "new.pdf" "{}";' {} \;
+      - run: git init
+      - uses: fregante/setup-git-user@v1
+      - run: git commit --allow-empty -m "Initial commit"
+      - run: cp -r /opt/multicell-parasite/ deploy/
+      - uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: binder # The branch the action should deploy to.
+          folder: deploy # The folder the action should deploy.

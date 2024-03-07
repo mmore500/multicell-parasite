@@ -1,30 +1,26 @@
-FROM mmore500/dishtiny:sha-7f3f5c8
+FROM ubuntu:22.04
 
-USER root
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
+    git \
+    cmake \
+    g++ \
+    make \
+    ccache \
+    libncurses5-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY . /opt/multicell-parasite
+COPY . /multicell-parasite
+WORKDIR "/multicell-parasite"
 
+RUN git submodule update --init --recursive
+
+# Build Avida
 RUN \
-  npm install -g \
-    bibtex-tidy@1.8.5 \
-    && \
-  echo "installed npm dependencies"
+  . ./pipeline/snippets/install_avida.sh && \
+  echo "AVIDA ${AVIDA}" && \
+  cp "${AVIDA}" /multicell-parasite/avida
 
-RUN \
-  python3 -m pip install -r /opt/multicell-parasite/requirements.txt \
-    && \
-  echo "installed python dependencies"
 
-RUN \
-  apt-get update -q --allow-unauthenticated \
-    && \
-  apt-get install -qy --no-install-recommends \
-    gawk \
-    ghostscript \
-    && \
-  rm -rf /var/lib/apt/lists/*
-
-USER user
-
-# Define default working directory.
-WORKDIR /opt/multicell-parasite
+# Set Avida executable as entrypoint
+ENTRYPOINT ["/multicell-parasite/avida"]
