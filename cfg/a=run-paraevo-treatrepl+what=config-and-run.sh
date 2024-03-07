@@ -649,8 +649,8 @@ Nop-B
 EOF
 #______________________________________________________________________________
 
-"${AVIDA}" -c avida.cfg -r  # review config settings
-"${AVIDA}" -c avida.cfg
+${AVIDA} -c avida.cfg -r  # review config settings
+${AVIDA} -c avida.cfg
 
 unset EPOCH_
 echo "unset EPOCH_ ${EPOCH_:-}"
